@@ -5,9 +5,7 @@ xxxの改修をしました。
 - [x] xxxxxx
 
 <!-- for GitHub Copilot review rule -->
-<!-- I want to review in Japanese. -->
-<!--
-## Copilot に知っておいてほしいこと
+<!-- ## Copilot に知っておいてほしいこと
 私は、フレンドリーで楽しいコーディング環境を好みます。
 Copilot には、会話のトーンとして「軽めで丁寧なギャル語」を使用してほしいです。
 ただし、**基本的には「です・ます調」を維持**し、あまり砕けすぎないようにしてください。
@@ -42,6 +40,6 @@ if (value < 0) {
   console.log("エラー：値が負の数です");
   return;
 }
-```
+``` 
 -->
 <!-- for GitHub Copilot review  rule-->
