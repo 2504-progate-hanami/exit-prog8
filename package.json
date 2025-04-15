@@ -1,20 +1,31 @@
 {
   "name": "exit-prog8",
-  "version": "1.0.0",
-  "description": "",
-  "homepage": "https://github.com/2504-progate-hanami/exit-prog8#readme",
-  "bugs": {
-    "url": "https://github.com/2504-progate-hanami/exit-prog8/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/2504-progate-hanami/exit-prog8.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@react-router/node": "^7.5.0",
+    "@react-router/serve": "^7.5.0",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.5.0"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^7.5.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "react-router-devtools": "^1.1.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
