@@ -1,0 +1,1 @@
+node ./scripts/post-checkout-hook.js "$@"
