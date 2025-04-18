@@ -25,6 +25,7 @@
 		"isbot": "^5.1.17",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
+		"react-resizable-panels": "^2.1.7",
 		"react-router": "^7.5.0"
 	},
 	"devDependencies": {
