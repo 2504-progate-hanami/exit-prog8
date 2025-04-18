@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { process } from "@react-router/node";
 import { execSync } from "child_process";
 import axios from "axios";
 
