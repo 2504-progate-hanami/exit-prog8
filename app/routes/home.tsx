@@ -1,6 +1,7 @@
 //import type { Route } from "./+types/home";
 
 import { ConsoleUI } from "~/components/ConsoleUI";
+import { EditorHoverButton } from "~/components/EditorHoverButton";
 import { SubmitButton } from "~/components/SubmitButton";
 
 export function meta() {
@@ -18,6 +19,8 @@ export default function Home() {
       <ConsoleUI mode="console" problemId={1} />
       <ConsoleUI mode="sample" problemId={2} />
       <SubmitButton onClick={() => alert("Button clicked!")} />
+      <EditorHoverButton onClick={() => alert("neko")} mode="reset" />
+      <EditorHoverButton onClick={() => alert("neko")} mode="answer" />
     </div>
   );
 }
