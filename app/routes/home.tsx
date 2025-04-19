@@ -1,5 +1,7 @@
 //import type { Route } from "./+types/home";
 
+import { ConsoleUI } from "~/components/ConsoleUI";
+
 export function meta() {
   return [
     { title: "New React Router App" },
@@ -8,5 +10,12 @@ export function meta() {
 }
 
 export default function Home() {
-  return <h1>Hello World!</h1>;
+  return (
+    <div>
+      <h2>Welcome to Remix</h2>
+      <p>This is a simple example of a Remix app using React Router.</p>
+      <ConsoleUI mode="console" problemId={1} />
+      <ConsoleUI mode="sample" problemId={2} />
+    </div>
+  );
 }
