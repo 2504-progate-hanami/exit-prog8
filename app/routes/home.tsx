@@ -1,6 +1,8 @@
 //import type { Route } from "./+types/home";
 
+import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { ConsoleUI } from "~/components/ConsoleUI";
+import { EditorComponent } from "~/components/EditorComponent";
 import { EditorHoverButton } from "~/components/EditorHoverButton";
 import { SubmitButton } from "~/components/SubmitButton";
 
@@ -14,10 +16,23 @@ export function meta() {
 export default function Home() {
   return (
     <div>
-      <h2>Welcome to Remix</h2>
-      <p>This is a simple example of a Remix app using React Router.</p>
-      <ConsoleUI mode="console" problemId={1} />
-      <ConsoleUI mode="sample" problemId={2} />
+      <PanelGroup direction="horizontal" className="h-screen">
+        <Panel defaultSize={30} minSize={20}>
+          <EditorComponent />
+        </Panel>
+        <PanelResizeHandle />
+        <Panel defaultSize={70} minSize={30}>
+          <PanelGroup direction="vertical">
+            <Panel defaultSize={50} minSize={20}>
+              <ConsoleUI mode="console" problemId={1} />
+            </Panel>
+            <PanelResizeHandle />
+            <Panel defaultSize={50} minSize={20}>
+              <ConsoleUI mode="sample" problemId={2} />
+            </Panel>
+          </PanelGroup>
+        </Panel>
+      </PanelGroup>
       <SubmitButton onClick={() => alert("Button clicked!")} />
       <EditorHoverButton onClick={() => alert("neko")} mode="reset" />
       <EditorHoverButton onClick={() => alert("neko")} mode="answer" />
