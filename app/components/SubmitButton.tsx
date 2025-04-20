@@ -1,5 +1,4 @@
 import type { JSX } from "react";
-
 export function SubmitButton({
   onClick,
 }: {
