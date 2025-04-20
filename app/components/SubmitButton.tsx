@@ -1,5 +1,4 @@
 import type { JSX } from "react";
-
 export function SubmitButton({
   onClick,
 }: {
@@ -16,6 +15,7 @@ export function SubmitButton({
           <p>{"できた!"}</p>
         </div>
       </button>
+
       <div
         className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-auto
                    opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
