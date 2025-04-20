@@ -1,4 +1,4 @@
-const SlideCheckButton: React.FC = () => {
+export function SlideCheckButton() {
   return (
     <button className="bg-teal-300 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded shadow-md flex items-center justify-center">
       <svg
@@ -16,6 +16,6 @@ const SlideCheckButton: React.FC = () => {
       <span className="text-sm">スライドで確認</span>
     </button>
   );
-};
+}
 
 export default SlideCheckButton;
