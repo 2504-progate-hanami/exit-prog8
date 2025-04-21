@@ -4,25 +4,17 @@ interface Checker {
 }
 
 interface CheckResult {
-  checker: Checker;
-  result: boolean;
+  status: "success" | "failed";
+  failedChecker?: Checker;
 }
 
 export const check = (
   code: string,
   staticCheckers: Array<Checker>,
   dynamicCheckers: Array<Checker>,
-): Array<CheckResult> => {
+): CheckResult => {
   // TODO: implement
   console.log(code, staticCheckers, dynamicCheckers);
 
-  return [
-    {
-      checker: {
-        description: "サンプルのテスト",
-        check: (code: string) => code.length > 0,
-      },
-      result: true,
-    },
-  ];
+  return { status: "success" };
 };
