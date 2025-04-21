@@ -1,6 +1,9 @@
 interface Checker {
   description: string;
   check: (code: string) => boolean;
+
+  // ユーザに対して表示されるメッセージ
+  message?: string;
 }
 
 interface CheckResult {
