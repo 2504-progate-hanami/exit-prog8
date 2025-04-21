@@ -29,3 +29,22 @@ export const signIn = async (email: string, password: string) => {
   console.log("ログイン成功:", data);
   return { data };
 };
+
+export const getCurrentUser = async () => {
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    console.error("ユーザー情報の取得に失敗しました💦:", error.message);
+    return null;
+  }
+  return data.user;
+};
+
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error("サインアウト失敗💦:", error.message);
+    return { error };
+  }
+  console.log("サインアウト成功✨");
+  return { success: true };
+};
