@@ -6,10 +6,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [name, setName] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, name);
     if (error) {
       setErrorMsg(error.message);
       setSuccessMsg("");
@@ -41,6 +42,17 @@ export default function SignupPage() {
             className="w-full border p-2 rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Name</label>
+          <input
+            type="text"
+            className="w-full border p-2 rounded"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
