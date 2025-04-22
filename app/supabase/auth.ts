@@ -1,6 +1,7 @@
 import { supabase } from "./client";
+import { addUser } from "./user";
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (email: string, password: string, name: string) => {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -9,6 +10,15 @@ export const signUp = async (email: string, password: string) => {
   if (error) {
     console.error("サインアップ失敗！:", error.message);
     return { error };
+  }
+
+  const user = data.user;
+  if (user) {
+    const { error: dbError } = await addUser(user.id, name);
+    if (dbError) {
+      console.error("ユーザー情報の保存に失敗しました:", dbError.message);
+      return { error: dbError };
+    }
   }
 
   console.log("サインアップ成功:", data);
