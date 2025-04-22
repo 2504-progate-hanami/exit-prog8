@@ -74,11 +74,45 @@ export const check = (
  * @param code 実行するコード
  * @returns コードの実行結果
  */
+/**
+ * コードを実行して出力を取得する関数。
+ * @param code 実行するコード
+ * @returns コードの実行結果 (console.log の出力と eval の結果を含む)
+ */
 const runCode = (code: string): string => {
+  let logOutput = "";
+  const originalConsoleLog = console.log; // 元の console.log を保存
+
+  // console.log をオーバーライド
+  console.log = (...args: unknown[]) => {
+    logOutput += args.join(" ") + "\n";
+  };
+
+  let evalResult: unknown;
   try {
-    const result = eval(code);
-    return result;
+    evalResult = eval(code);
   } catch (e) {
-    return `Error: ${e}`;
+    evalResult = `Error: ${e}`;
+  } finally {
+    // オーバーライドを元に戻す (eval の実行が終わったら必ず元に戻すことが重要！)
+    console.log = originalConsoleLog;
   }
+
+  // eval の結果と console.log の出力を結合して返す
+  return (
+    logOutput + (typeof evalResult !== "undefined" ? String(evalResult) : "")
+  );
 };
+
+// テスト
+if (import.meta) {
+  const sampleCode = `
+  console.log("Hello from eval!");
+  console.log(1 + 2);
+  const message = "World";
+  message;
+  `;
+
+  const result = runCode(sampleCode);
+  console.log("実行結果:\n" + result);
+}
