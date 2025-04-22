@@ -44,8 +44,41 @@ export const check = (
   staticCheckers: Array<StaticChecker>,
   dynamicCheckers: Array<DynamicChecker>,
 ): CheckResult => {
-  // TODO: implement
-  console.log(code, staticCheckers, dynamicCheckers);
+  // 静的チェック
+  for (const checker of staticCheckers) {
+    if (!checker.check(code)) {
+      return {
+        status: "failed",
+        failedChecker: checker,
+      };
+    }
+  }
+
+  // 動的チェック
+  for (const checker of dynamicCheckers) {
+    // コードを実行して出力を取得する
+    const out = runCode(code);
+    if (!checker.check(out)) {
+      return {
+        status: "failed",
+        failedChecker: checker,
+      };
+    }
+  }
 
   return { status: "success" };
+};
+
+/**
+ * コードを実行して出力を取得する関数。
+ * @param code 実行するコード
+ * @returns コードの実行結果
+ */
+const runCode = (code: string): string => {
+  try {
+    const result = eval(code);
+    return result;
+  } catch (e) {
+    return `Error: ${e}`;
+  }
 };
