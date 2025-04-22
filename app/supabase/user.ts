@@ -12,3 +12,21 @@ export const addUser = async (uuid: string, name: string) => {
   console.log("ユーザー情報を保存しました✨:", data);
   return { data };
 };
+
+export const getUserName = async (uuid: string) => {
+  console.log(uuid);
+  const { data, error } = await supabase
+    .from("User")
+    .select("user_name")
+    .eq("uuid", uuid)
+    .single();
+
+  if (error) {
+    console.error("ユーザー名の取得に失敗しました:", error.message);
+    return null;
+  }
+
+  console.log(`"取得したデータ:"${data}`);
+
+  return data?.user_name || null;
+};
