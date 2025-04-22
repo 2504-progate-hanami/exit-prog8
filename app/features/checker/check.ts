@@ -72,11 +72,6 @@ export const check = (
 /**
  * コードを実行して出力を取得する関数。
  * @param code 実行するコード
- * @returns コードの実行結果
- */
-/**
- * コードを実行して出力を取得する関数。
- * @param code 実行するコード
  * @returns コードの実行結果 (console.log の出力と eval の結果を含む)
  */
 const runCode = (code: string): string => {
@@ -104,6 +99,7 @@ const runCode = (code: string): string => {
   );
 };
 
+// ------------------------------
 // テスト
 if (import.meta) {
   const staticCheckers: StaticChecker[] = [
