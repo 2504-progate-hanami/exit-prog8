@@ -8,5 +8,5 @@ export interface Problem {
 export interface ProblemInstruction {
   title: string;
   description: string;
-  imgSrc: string;
+  imgSrc?: string;
 }
