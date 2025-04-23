@@ -1,3 +1,6 @@
+import { Console } from "console";
+import { Writable } from "stream";
+
 /**
  * 静的テストは、コードを受け取ってチェックする
  */
@@ -44,8 +47,120 @@ export const check = (
   staticCheckers: Array<StaticChecker>,
   dynamicCheckers: Array<DynamicChecker>,
 ): CheckResult => {
-  // TODO: implement
-  console.log(code, staticCheckers, dynamicCheckers);
+  // 静的チェック
+  for (const checker of staticCheckers) {
+    if (!checker.check(code)) {
+      return {
+        status: "failed",
+        failedChecker: checker,
+      };
+    }
+  }
+
+  // 動的チェック
+  for (const checker of dynamicCheckers) {
+    // コードを実行して出力を取得する
+    const out = runCode(code);
+    if (!checker.check(out)) {
+      return {
+        status: "failed",
+        failedChecker: checker,
+      };
+    }
+  }
 
   return { status: "success" };
 };
+
+/**
+ * コードを実行して出力を取得する関数。
+ * @param code 実行するコード
+ * @returns コードの実行結果 (console.log の出力と eval の結果を含む)
+ */
+const runCode = (code: string): string => {
+  let logOutput = "";
+  const logStream = new Writable({
+    write(chunk, encoding, callback) {
+      logOutput += chunk.toString();
+      callback();
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const customConsole = new Console({ stdout: logStream, stderr: logStream });
+
+  let evalResult: unknown;
+  try {
+    evalResult = eval(`(function(console){${code}})(customConsole)`);
+  } catch (e) {
+    evalResult = `Error: ${e}`;
+  }
+
+  return (
+    logOutput + (typeof evalResult !== "undefined" ? String(evalResult) : "")
+  );
+};
+
+// ------------------------------
+// テスト
+if (import.meta) {
+  const staticCheckers: StaticChecker[] = [
+    {
+      description: "コードに 'console.log' が含まれているかチェック",
+      check: (code) => code.includes("console.log"),
+      message: "'console.log' を含めてください！",
+    },
+  ];
+
+  const dynamicCheckers: DynamicChecker[] = [
+    {
+      description: "出力に 'Hello' が含まれているかチェック",
+      check: (out) => out.includes("Hello"),
+      message: "出力に 'Hello' を含めてください！",
+    },
+  ];
+
+  const sampleCode = `
+  console.log("Hello from eval!");
+  console.log(1 + 2);
+  const message = "World";
+  message;
+  `;
+  console.log(`コード: ${sampleCode}`);
+
+  console.log("--------------------------");
+  console.log("静的チェックを開始します🦈");
+
+  console.log("テスト：");
+
+  for (const checker of staticCheckers) {
+    console.log(` □ ${checker.description}`);
+    if (!checker.check(sampleCode)) {
+      console.log(`静的チェックに失敗しました: ${checker.description} 🦈`);
+      if (checker.message) {
+        console.log(`メッセージ: ${checker.message}`);
+      }
+      process.exit(1);
+    }
+  }
+  console.log("静的チェックに成功しました！🦈");
+
+  console.log("--------------------------");
+  console.log("動的チェックを開始します🦈");
+  const out = runCode(sampleCode);
+  console.log(`コードの出力: ${out}`);
+  for (const checker of dynamicCheckers) {
+    console.log(`動的チェック: ${checker.description}`);
+    if (!checker.check(out)) {
+      console.log(`動的チェックに失敗しました: ${checker.description} 🦈`);
+      if (checker.message) {
+        console.log(`メッセージ: ${checker.message}`);
+      }
+      process.exit(1);
+    }
+  }
+  console.log("動的チェックに成功しました！🦈");
+
+  console.log("--------------------------");
+  console.log("すべてのチェックに成功しました！🦈");
+}
