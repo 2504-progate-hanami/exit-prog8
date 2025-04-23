@@ -1,3 +1,6 @@
+import { Console } from "console";
+import { Writable } from "stream";
+
 /**
  * 静的テストは、コードを受け取ってチェックする
  */
@@ -76,24 +79,23 @@ export const check = (
  */
 const runCode = (code: string): string => {
   let logOutput = "";
-  const originalConsoleLog = console.log; // 元の console.log を保存
+  const logStream = new Writable({
+    write(chunk, encoding, callback) {
+      logOutput += chunk.toString();
+      callback();
+    },
+  });
 
-  // console.log をオーバーライド
-  console.log = (...args: unknown[]) => {
-    logOutput += args.join(" ") + "\n";
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const customConsole = new Console({ stdout: logStream, stderr: logStream });
 
   let evalResult: unknown;
   try {
-    evalResult = eval(code);
+    evalResult = eval(`(function(console){${code}})(customConsole)`);
   } catch (e) {
     evalResult = `Error: ${e}`;
-  } finally {
-    // オーバーライドを元に戻す (eval の実行が終わったら必ず元に戻すことが重要！)
-    console.log = originalConsoleLog;
   }
 
-  // eval の結果と console.log の出力を結合して返す
   return (
     logOutput + (typeof evalResult !== "undefined" ? String(evalResult) : "")
   );
