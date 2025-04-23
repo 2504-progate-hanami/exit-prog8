@@ -20,8 +20,9 @@ export function EditorHoverButton({
       onClick={onClick}
     >
       <div className="flex items-center ">
-        <span className="h-4 w-4 flex items-center">👀</span>
-        <span className="text-xs whitespace-nowrap">{buttonText}</span>
+        <span className="h-4 w-4 flex items-center text-xs whitespace-nowrap">
+          👀{buttonText}
+        </span>
       </div>
     </button>
   );

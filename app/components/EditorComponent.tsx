@@ -49,7 +49,7 @@ export function EditorComponent() {
     <div className="flex flex-col h-screen bg-[#1e1e1e]">
       <div className="flex justify-between items-center px-4 py-2 bg-gray-700 text-white shadow-md">
         <span>script.js</span>
-        <button className="text-white">⚙️</button>
+        <button className="text-white"></button>
       </div>
 
       <div className="flex-grow relative">
