@@ -1,7 +1,7 @@
 export interface Problem {
   name: string;
   instructions: Array<ProblemInstruction>;
-  procedure: string;
+  procedure: HTMLElement;
   answerCode: string;
 }
 
