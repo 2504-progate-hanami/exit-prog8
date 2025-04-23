@@ -1,0 +1,16 @@
+{
+  "name": "サンプル問題",
+  "instructions": [
+    {
+      "title": "ステップ1: 準備",
+      "description": "まずは必要なツールを準備しよう！"
+    },
+    {
+      "title": "ステップ2: 実行",
+      "description": "次にコードを実行してみよう！"
+    }
+  ],
+  "procedure": "<div>手順をここに記載します</div>",
+  "initialCode": "// 「Hello, World!」とコンソールに出力してください\n",
+  "answerCode": "// 「Hello, World!」とコンソールに出力してください\nconsole.log('Hello, world!');"
+}
