@@ -101,7 +101,7 @@ const runCode = (code: string): string => {
 
 // ------------------------------
 // テスト
-if (import.meta.main) {
+if (import.meta) {
   const staticCheckers: StaticChecker[] = [
     {
       description: "コードに 'console.log' が含まれているかチェック",
