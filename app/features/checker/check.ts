@@ -75,22 +75,24 @@ export const check = (
  * @returns コードの実行結果 (console.log の出力と eval の結果を含む)
  */
 const runCode = (code: string): string => {
-  let logOutput = "";
-  const originalConsoleLog = console.log; // 元の console.log を保存
+  import { Console } from "console";
+  import { Writable } from "stream";
 
-  // console.log をオーバーライド
-  console.log = (...args: unknown[]) => {
-    logOutput += args.join(" ") + "\n";
-  };
+  let logOutput = "";
+  const logStream = new Writable({
+    write(chunk, encoding, callback) {
+      logOutput += chunk.toString();
+      callback();
+    },
+  });
+  const customConsole = new Console({ stdout: logStream, stderr: logStream });
 
   let evalResult: unknown;
   try {
-    evalResult = eval(code);
+    const log = customConsole.log.bind(customConsole); // Use custom console for logging
+    evalResult = eval(`(function(console){${code}})(customConsole)`);
   } catch (e) {
     evalResult = `Error: ${e}`;
-  } finally {
-    // オーバーライドを元に戻す (eval の実行が終わったら必ず元に戻すことが重要！)
-    console.log = originalConsoleLog;
   }
 
   // eval の結果と console.log の出力を結合して返す
