@@ -1,7 +1,12 @@
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { EditorComponent } from "~/components/EditorComponent";
-import { ProcedureComponent } from "~/components/procedureComponent"; // 名前付きエクスポートとしてインポート
+import { ProcedureComponent } from "~/components/procedureComponent";
+import { useEffect } from "react";
+import { webContainerAtom } from "~/atoms";
+import { useAtom } from "jotai";
+import { WebContainer } from "@webcontainer/api";
+import { files } from "~/files";
 
 export function meta() {
   return [
@@ -11,6 +16,53 @@ export function meta() {
 }
 
 export default function Home() {
+  const [, setWebcontainer] = useAtom(webContainerAtom);
+
+  useEffect(() => {
+    async function bootWebContainer() {
+      try {
+        const container = await WebContainer.boot();
+
+        await container.mount(files.files);
+
+        const installProcess = await container.spawn("npm", ["install"]);
+        await installProcess.exit;
+
+        const catCodeRunnerProcess = await container.spawn("cat", [
+          "codeRunner.ts",
+        ]);
+        catCodeRunnerProcess.output.pipeTo(
+          new WritableStream({
+            write(data) {
+              console.log("cat codeRunner.ts:", data);
+            },
+          }),
+        );
+        await catCodeRunnerProcess.exit;
+
+        const tscProcess = await container.spawn("npx", [
+          "tsc",
+          "--outDir",
+          ".",
+          "codeRunner.ts",
+          "check.ts",
+        ]);
+
+        const tscExitCode = await tscProcess.exit;
+        if (tscExitCode !== 0) {
+          console.log("コンパイルエラー:", tscExitCode);
+          return;
+        }
+        console.log("WebContainerが起動しました");
+
+        setWebcontainer(container);
+      } catch (error) {
+        console.error("WebContainerの起動に失敗:", error);
+      }
+    }
+    bootWebContainer();
+  }, []);
+
   return (
     <div>
       <PanelGroup direction="horizontal" className="h-screen">
@@ -24,11 +76,11 @@ export default function Home() {
         <PanelResizeHandle />
         <Panel defaultSize={50} minSize={30}>
           <PanelGroup direction="vertical">
-            <Panel defaultSize={50} minSize={20}>
+            <Panel defaultSize={40} minSize={20}>
               <ConsoleUI mode="console" problemId={1} />
             </Panel>
             <PanelResizeHandle />
-            <Panel defaultSize={50} minSize={20}>
+            <Panel defaultSize={30} minSize={20}>
               <ConsoleUI mode="sample" problemId={2} />
             </Panel>
           </PanelGroup>
