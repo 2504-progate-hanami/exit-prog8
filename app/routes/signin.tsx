@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { signIn } from "../supabase/auth";
+import { Link } from "react-router-dom"; // リンク用のインポートを追加
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -51,6 +52,16 @@ export default function AuthPage() {
           ログイン
         </button>
       </form>
+
+      {/* パスワードを忘れた場合の案内を追加 */}
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-600">
+          パスワードを忘れた場合は{" "}
+          <Link to="/forgot" className="text-blue-600 hover:underline">
+            こちら
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

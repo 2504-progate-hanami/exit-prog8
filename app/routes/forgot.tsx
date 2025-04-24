@@ -19,7 +19,12 @@ export default function ForgotPassword() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">パスワードをお忘れですか？</h1>
+      <h1 className="text-xl font-bold mb-4">パスワードを忘れた場合</h1>
+      <p>
+        ご登録いただいたメールアドレスを入力してください。
+        <br />
+        メールアドレス宛に、パスワード変更ページのURLが記載されたメールを送信します。
+      </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="email"
@@ -33,7 +38,7 @@ export default function ForgotPassword() {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded"
         >
-          メールを送信
+          送信
         </button>
         {message && <p className="text-sm mt-2 text-gray-700">{message}</p>}
       </form>
