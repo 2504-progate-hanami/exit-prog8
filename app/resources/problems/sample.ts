@@ -2,52 +2,39 @@ import type { Problem } from "~/types/problem";
 
 const procedure = document.createElement("div");
 procedure.innerHTML =
-  "<p>これはサンプルの手順です。<br>手順はHTMLで書くことができます。</p>";
+  "<p>この問題では、<code>console.log</code> を使って 'Hello world' を出力するプログラムを書いてみよう！</p>";
 
 export default {
-  name: "サンプル問題",
+  name: "Hello World 問題",
   instructions: [
     {
-      title: "関数とは",
+      title: "console.log とは",
       description:
-        "関数は、特定の処理をまとめて実行するためのものです。関数を使うことで、コードを再利用しやすくなります。",
-      // imgSrc: "/images/step1.png",
+        "console.log は、JavaScriptでコンソールにメッセージを出力するための関数やね～。デバッグや確認に便利！",
     },
     {
-      title: "関数のつくりかた",
+      title: "Hello world を出力しよう",
       description:
-        "関数は、function キーワードを使って定義します。かっこの中には、引数を指定します。引数は、関数に渡す値のことです。関数の中では、return キーワードを使って、結果を返します。",
+        "プログラムの基本中の基本！<code>console.log</code> を使って 'Hello world' を出力してみよう～",
     },
   ],
   procedure,
-  initialCode: `function add(a, b) {
-    return a + b;
-  }`,
-  answerCode: `function add(a, b) {
-    return a + b;
-  }`,
+  initialCode: `// ここにコードを書いてね！`,
+  answerCode: `console.log("Hello world");`,
   checkers: {
     static: [
       {
-        description: "関数が定義されていることを確認する",
-        check: (code: string) => /function\s+\w+\s*\(/.test(code),
-        message: "関数を定義してください",
+        description: "console.log が使われていることを確認する",
+        check: (code: string) => /console\.log\(/.test(code),
+        message: "console.log を使ってください",
       },
       {
-        description: "関数名が 'add' であることを確認する",
-        check: (code: string) => /function\s+add\s*\(/.test(code),
-        message: "関数名は 'add' にしてください",
+        description: "'Hello world' が出力されることを確認する",
+        check: (code: string) =>
+          /console\.log\(["']Hello world["']\)/.test(code),
+        message: "'Hello world' を出力してください",
       },
     ],
-    dynamic: [
-      {
-        description: "add 関数が正しい結果を返すことを確認する",
-        check: (out: string) => {
-          const result = eval(out + "; add(2, 3);");
-          return result === 5;
-        },
-        message: "結果が 5 になるようにしてください",
-      },
-    ],
+    dynamic: [],
   },
 } as Problem;
