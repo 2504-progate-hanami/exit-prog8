@@ -28,13 +28,13 @@ export default {
         check: (code: string) => /console\.log\(/.test(code),
         message: "console.log を使ってください",
       },
+    ],
+    dynamic: [
       {
         description: "'Hello world' が出力されることを確認する",
-        check: (code: string) =>
-          /console\.log\(["']Hello world["']\)/.test(code),
+        check: (out: string) => /Hello world/.test(out),
         message: "'Hello world' を出力してください",
       },
     ],
-    dynamic: [],
   },
 } as Problem;
