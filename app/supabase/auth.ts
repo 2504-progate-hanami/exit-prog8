@@ -61,7 +61,7 @@ export const signOut = async () => {
 
 export const sendResetPasswordEmail = async (email: string) => {
   return await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: "http://localhost:5173/reset-password",
+    redirectTo: `${import.meta.env.VITE_BASE_URL}reset-password`,
   });
 };
 
