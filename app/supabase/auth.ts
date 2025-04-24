@@ -58,3 +58,13 @@ export const signOut = async () => {
   console.log("サインアウト成功✨");
   return { success: true };
 };
+
+export const sendResetPasswordEmail = async (email: string) => {
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${import.meta.env.VITE_BASE_URL}reset-password`,
+  });
+};
+
+export const updatePassword = async (newPassword: string) => {
+  return await supabase.auth.updateUser({ password: newPassword });
+};
