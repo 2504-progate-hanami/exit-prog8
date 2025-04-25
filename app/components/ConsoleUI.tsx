@@ -7,7 +7,6 @@ import { problemAtom } from "~/atoms";
 
 type ConsoleUIProps = {
   mode: "console" | "sample";
-  problemId: number;
 };
 
 export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
