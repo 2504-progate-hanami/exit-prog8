@@ -85,7 +85,6 @@ const Problems: React.FC = () => {
 
   return (
     <div>
-      <a href="/problems/1">Go to Problem 1</a>
       <PanelGroup direction="horizontal" className="h-screen">
         <Panel defaultSize={20} minSize={15}>
           <ProcedureComponent />
