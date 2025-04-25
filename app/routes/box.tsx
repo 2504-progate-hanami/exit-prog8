@@ -4,12 +4,16 @@ import { WebContainer } from "@webcontainer/api";
 import { files } from "~/files";
 import "@xterm/xterm/css/xterm.css";
 
-import { Terminal } from "@xterm/xterm";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let Terminal: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let FitAddon: any;
 
 export default function Box(): JSX.Element {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null);
-  const [, setTerminal] = useState<Terminal | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [, setTerminal] = useState<any | null>(null);
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [tsCode, setTsCode] = useState<string>(
@@ -38,6 +42,13 @@ export {};`,
   useEffect(() => {
     async function bootWebContainer() {
       try {
+        // ブラウザ環境でのみモジュールを動的にインポート
+        const xtermModule = await import("@xterm/xterm");
+        const fitAddonModule = await import("@xterm/addon-fit");
+
+        Terminal = xtermModule.Terminal;
+        FitAddon = fitAddonModule.FitAddon;
+
         const terminalInstance = new Terminal({
           convertEol: true,
           scrollback: 2000,
@@ -47,6 +58,9 @@ export {};`,
         if (terminalRef.current) {
           terminalInstance.open(terminalRef.current);
         }
+
+        const fitAddon = new FitAddon();
+        terminalInstance.loadAddon(fitAddon);
 
         const container = await WebContainer.boot();
         await container.mount(files.files);
@@ -105,7 +119,6 @@ export {};`,
         setOutput((prev) => prev + "✅ codeRunner.tsのコンパイル完了!\n");
         setWebcontainer(container);
 
-        // 対話型シェルを起動
         const shellProcess = await container.spawn("jsh", {
           terminal: {
             cols: terminalInstance.cols,
@@ -113,7 +126,6 @@ export {};`,
           },
         });
 
-        // シェルプロセスの出力をターミナルに表示
         shellProcess.output.pipeTo(
           new WritableStream({
             write(data) {
@@ -122,19 +134,12 @@ export {};`,
           }),
         );
 
-        // ターミナルからの入力をシェルプロセスに渡す
         const input = shellProcess.input.getWriter();
         terminalInstance.onData((data) => {
           input.write(data);
         });
 
-        // ターミナルのサイズ変更時にシェルのサイズも変更
-        terminalInstance.onResize(({ cols, rows }) => {
-          shellProcess.resize({
-            cols,
-            rows,
-          });
-        });
+        fitAddon.fit();
       } catch (error) {
         console.error("WebContainerの起動に失敗:", error);
         setOutput((prev) => prev + `❌ エラー: ${error}\n`);
