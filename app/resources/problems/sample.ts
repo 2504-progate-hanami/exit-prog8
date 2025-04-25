@@ -37,4 +37,5 @@ export default {
       },
     ],
   },
+  nextProblemId: "2",
 } as Problem;

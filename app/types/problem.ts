@@ -10,6 +10,7 @@ export interface Problem {
     static: Array<StaticChecker>;
     dynamic: Array<DynamicChecker>;
   };
+  nextProblemId?: string;
 }
 
 export interface ProblemInstruction {
