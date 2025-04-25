@@ -140,10 +140,7 @@ export function EditorComponent() {
       </div>
 
       <div className="flex justify-between items-center px-4 py-2 bg-[#333] text-white">
-        <EditorHoverButton
-          onClick={() => editorInstance?.setValue("")}
-          mode="reset"
-        />
+        <EditorHoverButton mode="reset" editorInstance={editorInstance} />
         <EditorHoverButton onClick={() => checkHandle()} mode="answer" />
         <SubmitButton onClick={() => checkHandle()} />
       </div>

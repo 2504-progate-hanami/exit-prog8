@@ -1,14 +1,28 @@
 import { useState } from "react";
 import type { JSX } from "react";
+import type { IStandaloneCodeEditor } from "monaco-editor"; // 型をインポート
+import { useAtom } from "jotai";
+import { editorContentAtom } from "~/atoms"; // editorContentAtomをインポート
+
+let defaultContentFlag = 0;
 
 export function EditorHoverButton({
   onClick,
   mode,
+  editorInstance,
 }: {
   onClick: () => void;
   mode: "reset" | "answer";
+  editorInstance?: IStandaloneCodeEditor | null;
 }): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [defaultContent, setDefaultContent] = useState(""); // 初期値を保持するためのstate
+  const [editorContent] = useAtom(editorContentAtom); // 現在のエディター内容を取得
+
+  if (defaultContentFlag == 0) {
+    setDefaultContent(editorContent);
+    defaultContentFlag++;
+  }
 
   const handleResetClick = () => {
     if (mode === "reset") {
@@ -50,6 +64,7 @@ export function EditorHoverButton({
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={() => {
+                  editorInstance?.setValue(defaultContent); // ここで設定している値にリセット
                   closeModal();
                   onClick();
                 }}
