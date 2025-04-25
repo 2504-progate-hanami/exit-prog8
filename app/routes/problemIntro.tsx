@@ -9,6 +9,7 @@ const ProblemIntro: React.FC = () => {
       <h1>Problem Intro</h1>
       <p>Problem ID: {id}</p>
       <p>Slide Index: {index}</p>
+      <a href="/congrats">Go to Congrats</a>
     </div>
   );
 };

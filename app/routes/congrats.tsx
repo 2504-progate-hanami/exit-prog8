@@ -5,6 +5,7 @@ const Congrats: React.FC = () => {
     <div>
       <h1>Congratulations!</h1>
       <p>You have completed all the problems!</p>
+      <a href="/">Go to LP</a>
     </div>
   );
 };

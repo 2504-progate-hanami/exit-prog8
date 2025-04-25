@@ -8,6 +8,7 @@ const Problems: React.FC = () => {
     <div>
       <h1>Problem Page</h1>
       <p>Problem ID: {id}</p>
+      <a href="/problems/1/intro/1">Go to Problem 1 Slide 1</a>
     </div>
   );
 };
