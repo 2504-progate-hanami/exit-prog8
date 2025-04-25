@@ -5,17 +5,24 @@ import { SubmitButton } from "./SubmitButton";
 import { EditorHoverButton } from "./EditorHoverButton";
 import { editorInstanceAtom, editorContentAtom } from "../atoms";
 import Editor from "@monaco-editor/react";
-import { webContainerAtom } from "~/atoms";
+import { webContainerAtom, problemAtom } from "~/atoms";
 
 export function EditorComponent() {
   const [editorInstance, setEditorInstance] = useAtom(editorInstanceAtom);
   const [content, setContent] = useAtom(editorContentAtom);
   const [isMounted, setIsMounted] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
+  const [problem] = useAtom(problemAtom);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (problem?.initialCode) {
+      setContent(problem.initialCode);
+    }
+  }, [problem, setContent]);
 
   function checkHandle() {
     const staticCheckerCode = `

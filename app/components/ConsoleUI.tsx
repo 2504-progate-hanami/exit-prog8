@@ -3,10 +3,10 @@ import type { JSX } from "react";
 import { useAtom } from "jotai";
 import { editorContentAtom } from "~/atoms";
 import { webContainerAtom } from "~/atoms";
+import { problemAtom } from "~/atoms";
 
 type ConsoleUIProps = {
   mode: "console" | "sample";
-  problemId: number;
 };
 
 export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
@@ -14,6 +14,7 @@ export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
   const [consoleOutput, setConsoleOutput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
+  const [problem] = useAtom(problemAtom);
 
   const handleRun = async () => {
     try {
@@ -24,12 +25,14 @@ export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
         throw new Error("WebContainer is not initialized");
       }
 
+      const codeToRun =
+        mode === "console" ? content : problem?.answerCode || "";
+
       const nodeProcess = await webContainer.spawn("node", [
         "-e",
         `
         const { runCode } = require('./codeRunner.js');
-        // console.logではなく結果をそのまま返す
-        process.stdout.write(runCode(\`${content}\`));
+        process.stdout.write(runCode(\`${codeToRun}\`));
       `,
       ]);
 
