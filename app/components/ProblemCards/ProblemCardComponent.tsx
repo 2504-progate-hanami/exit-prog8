@@ -24,32 +24,10 @@ export function Card({ where, problemProps, problem }: card) {
         </svg>
         <span className="text-gray-700 font-semibold">{where}</span>
       </div>
-
       <div className="flex items-center mb-4">
-        <div className="relative">
-          <input
-            type="text"
-            className="w-24 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm text-black"
-            value={problemProps}
-            readOnly
-          />
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </div>
-        </div>
+        <span className="ml-2 text-gray-700 text-sm">{problemProps}</span>
+      </div>
+      <div className="flex items-center mb-4">
         <span className="ml-2 text-gray-700 text-sm">{problem}</span>
       </div>
 
