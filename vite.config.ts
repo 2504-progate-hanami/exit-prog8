@@ -11,4 +11,7 @@ export default defineConfig({
     tsconfigPaths(),
     crossOriginIsolation(),
   ],
+  ssr: {
+    noExternal: ["@xterm/xterm"],
+  },
 });

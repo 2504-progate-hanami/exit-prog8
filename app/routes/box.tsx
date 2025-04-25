@@ -1,10 +1,15 @@
 import type { JSX } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { WebContainer } from "@webcontainer/api";
 import { files } from "~/files";
+import "@xterm/xterm/css/xterm.css";
+
+import { Terminal } from "@xterm/xterm";
 
 export default function Box(): JSX.Element {
+  const terminalRef = useRef<HTMLDivElement>(null);
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null);
+  const [, setTerminal] = useState<Terminal | null>(null);
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [tsCode, setTsCode] = useState<string>(
@@ -33,6 +38,16 @@ export {};`,
   useEffect(() => {
     async function bootWebContainer() {
       try {
+        const terminalInstance = new Terminal({
+          convertEol: true,
+          scrollback: 2000,
+        });
+        setTerminal(terminalInstance);
+
+        if (terminalRef.current) {
+          terminalInstance.open(terminalRef.current);
+        }
+
         const container = await WebContainer.boot();
         await container.mount(files.files);
 
@@ -47,6 +62,7 @@ export {};`,
             write(data) {
               installOutput += data;
               setOutput((prev) => prev + data); // リアルタイムで出力を表示
+              terminalInstance.write(data); // ターミナルにも表示
             },
           }),
         );
@@ -73,6 +89,7 @@ export {};`,
             write(data) {
               tscOutput += data;
               setOutput((prev) => prev + data);
+              terminalInstance.write(data); // ターミナルにも表示
             },
           }),
         );
@@ -87,6 +104,37 @@ export {};`,
 
         setOutput((prev) => prev + "✅ codeRunner.tsのコンパイル完了!\n");
         setWebcontainer(container);
+
+        // 対話型シェルを起動
+        const shellProcess = await container.spawn("jsh", {
+          terminal: {
+            cols: terminalInstance.cols,
+            rows: terminalInstance.rows,
+          },
+        });
+
+        // シェルプロセスの出力をターミナルに表示
+        shellProcess.output.pipeTo(
+          new WritableStream({
+            write(data) {
+              terminalInstance.write(data);
+            },
+          }),
+        );
+
+        // ターミナルからの入力をシェルプロセスに渡す
+        const input = shellProcess.input.getWriter();
+        terminalInstance.onData((data) => {
+          input.write(data);
+        });
+
+        // ターミナルのサイズ変更時にシェルのサイズも変更
+        terminalInstance.onResize(({ cols, rows }) => {
+          shellProcess.resize({
+            cols,
+            rows,
+          });
+        });
       } catch (error) {
         console.error("WebContainerの起動に失敗:", error);
         setOutput((prev) => prev + `❌ エラー: ${error}\n`);
@@ -197,6 +245,18 @@ export {};`,
       <div className="mt-4 text-gray-600 text-sm">
         ヒント:
         TypeScriptファイルをコンパイルして実行するよ。型チェックも動作するから、エラーがあれば教えるね🦈
+      </div>
+
+      <div className="w-full max-w-4xl mt-6">
+        <div className="mb-2 font-semibold">対話型ターミナル:</div>
+        <div
+          ref={terminalRef}
+          className="terminal w-full h-60 bg-black rounded shadow-md overflow-hidden p-2"
+        ></div>
+        <div className="mt-1 text-xs text-gray-500">
+          ※
+          ここでシェルコマンドが使えるよ！ファイル操作したり、npmコマンド実行したりできるよ🦈
+        </div>
       </div>
     </div>
   );
