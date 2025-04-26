@@ -52,7 +52,6 @@ export function EditorComponent() {
         contextMenuOrder: 1.5,
         run: function (): void {
           checkHandle();
-          setShowSubmitPopup(true);
         },
       });
 
