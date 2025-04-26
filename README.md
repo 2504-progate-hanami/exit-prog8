@@ -23,5 +23,5 @@ npm run format:fix
 ```
 
 ## 使用技術
-[![My Skills](https://skillicons.dev/icons?i=ts,react,tailwind,supabase,vercel)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=nodejs,ts,react,tailwind,supabase,vercel)](https://skillicons.dev)
 - monako editor
