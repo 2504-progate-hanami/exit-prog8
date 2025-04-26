@@ -139,7 +139,7 @@ export function EditorComponent() {
       label: "Execute Custom Action (Loading...)",
 
       keybindings: [
-        monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter,
+        monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KeyS, // Ctrl+EnterからCtrl+Sに変更して競合回避
       ],
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
