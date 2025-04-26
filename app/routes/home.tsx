@@ -1,92 +1,29 @@
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
-import { ConsoleUI } from "~/components/ConsoleUI";
-import { EditorComponent } from "~/components/EditorComponent";
-import { ProcedureComponent } from "~/components/procedureComponent";
-import { useEffect } from "react";
-import { webContainerAtom } from "~/atoms";
-import { useAtom } from "jotai";
-import { WebContainer } from "@webcontainer/api";
-import { files } from "~/files";
-
-export function meta() {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
+import { HomeButton } from "./homeButton";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const [, setWebcontainer] = useAtom(webContainerAtom);
-
-  useEffect(() => {
-    async function bootWebContainer() {
-      try {
-        const container = await WebContainer.boot();
-
-        await container.mount(files.files);
-
-        const installProcess = await container.spawn("npm", ["install"]);
-        await installProcess.exit;
-
-        const catCodeRunnerProcess = await container.spawn("cat", [
-          "codeRunner.ts",
-        ]);
-        catCodeRunnerProcess.output.pipeTo(
-          new WritableStream({
-            write(data) {
-              console.log("cat codeRunner.ts:", data);
-            },
-          }),
-        );
-        await catCodeRunnerProcess.exit;
-
-        const tscProcess = await container.spawn("npx", [
-          "tsc",
-          "--outDir",
-          ".",
-          "codeRunner.ts",
-          "check.ts",
-        ]);
-
-        const tscExitCode = await tscProcess.exit;
-        if (tscExitCode !== 0) {
-          console.log("コンパイルエラー:", tscExitCode);
-          return;
-        }
-        console.log("WebContainerが起動しました");
-
-        setWebcontainer(container);
-      } catch (error) {
-        console.error("WebContainerの起動に失敗:", error);
-      }
-    }
-    bootWebContainer();
-  }, []);
+  const navigate = useNavigate();
 
   return (
-    <div>
-      <a href="/problems/1">Go to Problem 1</a>
-      <PanelGroup direction="horizontal" className="h-screen">
-        <Panel defaultSize={20} minSize={15}>
-          <ProcedureComponent />
-        </Panel>
-        <PanelResizeHandle />
-        <Panel defaultSize={30} minSize={20}>
-          <EditorComponent />
-        </Panel>
-        <PanelResizeHandle />
-        <Panel defaultSize={50} minSize={30}>
-          <PanelGroup direction="vertical">
-            <Panel defaultSize={40} minSize={20}>
-              <ConsoleUI mode="console" />
-            </Panel>
-            <PanelResizeHandle />
-            <Panel defaultSize={30} minSize={20}>
-              <ConsoleUI mode="sample" />
-            </Panel>
-          </PanelGroup>
-        </Panel>
-      </PanelGroup>
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-800 to-white">
+      <div className="bg-gray-800 bg-opacity-75 rounded-lg shadow-lg p-12">
+        <h1 className="text-4xl font-bold mb-8 text-center uppercase tracking-wider text-white">
+          <span className="text-gray-400">Welcome</span> to p
+          <span className="lowercase">rog</span>-8
+        </h1>
+        <p className="text-lg text-gray-300 mb-10 text-center leading-relaxed">
+          プログラミングの旅を、
+          <span className="font-semibold text-white">今すぐ</span>
+          始めよう！下のボタンをクリック。
+        </p>
+        <div className="flex justify-center">
+          <HomeButton
+            detail={"始める"}
+            onC={() => navigate("/explain")}
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline uppercase tracking-wider"
+          />
+        </div>
+      </div>
     </div>
   );
 }
