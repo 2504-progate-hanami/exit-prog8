@@ -25,56 +25,32 @@ export function EditorComponent() {
   }, [problem, setContent]);
 
   function checkHandle() {
-    const staticCheckerCode = `
-      const staticCheckers = [
-        {
-          description: "コードに 'console.log' が含まれているかチェック",
-          check: (code) => code.includes("console.log"),
-          message: "'console.log' を含めてください！",
-        },
-      ];
-    `;
-
-    const dynamicCheckerCode = `
-      const dynamicCheckers = [
-        {
-          description: "出力に 'Hello' が含まれているかチェック",
-          check: (out) => out.includes("Hello"),
-          message: "出力に 'Hello' を含めてください！",
-        },
-      ];
-    `;
-
-    // checker.jsを使ってコードをチェックする
     if (!webContainer) {
       console.error("webContainer が null です。処理を中断します。");
       return;
     }
 
+    if (!problem) {
+      console.error("問題データが null です。処理を中断します。");
+      return;
+    }
+
+    // 静的チェッカーと動的チェッカーをJSON文字列化
+    const staticCheckersJSON = JSON.stringify(problem.checkers.static);
+    const dynamicCheckersJSON = JSON.stringify(problem.checkers.dynamic);
+
+    // TypeScriptファイルを実行するために、まずコンパイルする
     webContainer
-      .spawn("node", [
-        "-e",
-        `
-      const { check } = require('./check.js');
-      
-      ${staticCheckerCode}
-      ${dynamicCheckerCode}
-      
-      // エディタのコンテンツをチェック
-      const codeToCheck = \`${content}\`;
-      
-      const result = check(codeToCheck, staticCheckers, dynamicCheckers);
-      
-      console.log('チェック結果:', JSON.stringify(result, null, 2));
-      
-      if (result.status === "success") {
-        console.log("🦈 おめでとう！全てのチェックに合格したよ！");
-      } else if (result.failedChecker) {
-        console.log("🦈 残念！チェックに失敗したよ...");
-        console.log("理由: " + (result.failedChecker.message || result.failedChecker.description));
-      }
-    `,
-      ])
+      .spawn("npx", ["tsc", "--outDir", "dist"])
+      .then(() => {
+        // コンパイル成功後、コンパイルされたJSファイルを実行
+        return webContainer.spawn("node", [
+          "dist/runChecker.js",
+          content,
+          staticCheckersJSON,
+          dynamicCheckersJSON,
+        ]);
+      })
       .then((process: { output: ReadableStream }) => {
         process.output.pipeTo(
           new WritableStream({
