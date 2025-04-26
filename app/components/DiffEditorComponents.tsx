@@ -90,10 +90,10 @@ export function DiffEditorComponents({ onClose }: { onClose?: () => void }) {
             {showDiff ? (
               <div className="flex flex-col h-full">
                 <div className="flex bg-gray-700 text-white">
-                  <div className="w-1/2 p-2 border-r border-gray-600">
+                  <div className="w-1/2 p-2 border-r border-gray-600 text-center">
                     自分のコード
                   </div>
-                  <div className="w-1/2 p-2">答えのコード</div>
+                  <div className="w-1/2 p-2 text-center">答えのコード</div>
                 </div>
                 <div className="flex-1">
                   <DiffEditor
@@ -106,6 +106,8 @@ export function DiffEditorComponents({ onClose }: { onClose?: () => void }) {
                       automaticLayout: true,
                       renderSideBySide: true,
                       scrollBeyondLastLine: false,
+                      enableSplitViewResizing: false,
+                      originalEditable: false,
                       minimap: {
                         enabled: false,
                       },
