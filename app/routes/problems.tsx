@@ -34,8 +34,8 @@ const Problems: React.FC = () => {
   // キーボードショートカットの処理
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      // Ctrl+Shift+D でデバッグモードのトグル
-      if (event.ctrlKey && event.shiftKey && event.key === "D") {
+      // 開発者モード用の隠しキーボードショートカット (Ctrl+Alt+/)
+      if (event.ctrlKey && event.altKey && event.key === "/") {
         event.preventDefault();
         setIsDebugMode(!isDebugMode);
         console.log(`デバッグモード: ${!isDebugMode ? "ON" : "OFF"}`);

@@ -1,4 +1,3 @@
-// filepath: /home/yotu/github/exit-prog8/app/components/DebugModePopup.tsx
 import { useAtom } from "jotai";
 import React from "react";
 import {
@@ -76,10 +75,6 @@ export const DebugModePopup: React.FC = () => {
           </div>
         </div>
       )}
-
-      <div className="mt-3 text-xs text-gray-400">
-        <p>Ctrl+Shift+D でデバッグモードの切り替えができるよ！</p>
-      </div>
     </div>
   );
 };
