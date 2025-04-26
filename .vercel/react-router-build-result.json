@@ -1,0 +1,226 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs_eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "routes/lp": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/signin": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/signup": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/forgot": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/reset-password": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/home": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/problems": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/problemIntro": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/detailGame": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/congrats": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/box": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {}
+      },
+      "routes/lp": {
+        "id": "routes/lp",
+        "parentId": "root",
+        "file": "app/routes/lp.tsx",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/signin": {
+        "id": "routes/signin",
+        "parentId": "root",
+        "file": "app/routes/signin.tsx",
+        "path": "signin",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/signup": {
+        "id": "routes/signup",
+        "parentId": "root",
+        "file": "app/routes/signup.tsx",
+        "path": "signup",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/forgot": {
+        "id": "routes/forgot",
+        "parentId": "root",
+        "file": "app/routes/forgot.tsx",
+        "path": "forgot",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/reset-password": {
+        "id": "routes/reset-password",
+        "parentId": "root",
+        "file": "app/routes/reset-password.tsx",
+        "path": "reset-password",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "app/routes/home.tsx",
+        "path": "home",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/problems": {
+        "id": "routes/problems",
+        "parentId": "root",
+        "file": "app/routes/problems.tsx",
+        "path": "problems/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/problemIntro": {
+        "id": "routes/problemIntro",
+        "parentId": "root",
+        "file": "app/routes/problemIntro.tsx",
+        "path": "problems/:id/intro/:index",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/detailGame": {
+        "id": "routes/detailGame",
+        "parentId": "root",
+        "file": "app/routes/detailGame.tsx",
+        "path": "explain",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/congrats": {
+        "id": "routes/congrats",
+        "parentId": "root",
+        "file": "app/routes/congrats.tsx",
+        "path": "congrats",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/box": {
+        "id": "routes/box",
+        "parentId": "root",
+        "file": "app/routes/box.tsx",
+        "path": "box",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    }
+  },
+  "reactRouterConfig": {
+    "appDirectory": "/Users/irj0927/WorkSpace/exit-prog8/app",
+    "basename": "/",
+    "buildDirectory": "/Users/irj0927/WorkSpace/exit-prog8/build",
+    "future": {
+      "unstable_middleware": false,
+      "unstable_optimizeDeps": false,
+      "unstable_splitRouteModules": false,
+      "unstable_subResourceIntegrity": false,
+      "unstable_viteEnvironmentApi": false
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/lp": {
+        "id": "routes/lp",
+        "parentId": "root",
+        "file": "routes/lp.tsx",
+        "index": true
+      },
+      "routes/signin": {
+        "id": "routes/signin",
+        "parentId": "root",
+        "file": "routes/signin.tsx",
+        "path": "signin"
+      },
+      "routes/signup": {
+        "id": "routes/signup",
+        "parentId": "root",
+        "file": "routes/signup.tsx",
+        "path": "signup"
+      },
+      "routes/forgot": {
+        "id": "routes/forgot",
+        "parentId": "root",
+        "file": "routes/forgot.tsx",
+        "path": "forgot"
+      },
+      "routes/reset-password": {
+        "id": "routes/reset-password",
+        "parentId": "root",
+        "file": "routes/reset-password.tsx",
+        "path": "reset-password"
+      },
+      "routes/home": {
+        "id": "routes/home",
+        "parentId": "root",
+        "file": "routes/home.tsx",
+        "path": "home"
+      },
+      "routes/problems": {
+        "id": "routes/problems",
+        "parentId": "root",
+        "file": "routes/problems.tsx",
+        "path": "problems/:id"
+      },
+      "routes/problemIntro": {
+        "id": "routes/problemIntro",
+        "parentId": "root",
+        "file": "routes/problemIntro.tsx",
+        "path": "problems/:id/intro/:index"
+      },
+      "routes/detailGame": {
+        "id": "routes/detailGame",
+        "parentId": "root",
+        "file": "routes/detailGame.tsx",
+        "path": "explain"
+      },
+      "routes/congrats": {
+        "id": "routes/congrats",
+        "parentId": "root",
+        "file": "routes/congrats.tsx",
+        "path": "congrats"
+      },
+      "routes/box": {
+        "id": "routes/box",
+        "parentId": "root",
+        "file": "routes/box.tsx",
+        "path": "box"
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}
