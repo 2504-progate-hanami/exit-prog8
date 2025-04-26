@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import type * as monaco from "monaco-editor";
-import { useAtom } from "jotai";
-import { SubmitButton } from "./SubmitButton";
-import { EditorHoverButton } from "./EditorHoverButton";
-import { editorInstanceAtom, editorContentAtom } from "../atoms";
 import Editor from "@monaco-editor/react";
-import { webContainerAtom, problemAtom } from "~/atoms";
+import { useAtom, useSetAtom } from "jotai";
+import type * as monaco from "monaco-editor";
+import { useEffect, useState } from "react";
+import { checkStateAtom, problemAtom, webContainerAtom } from "~/atoms";
+import { editorContentAtom, editorInstanceAtom } from "../atoms";
+import { EditorHoverButton } from "./EditorHoverButton";
+import { SubmitButton } from "./SubmitButton";
 
 export function EditorComponent() {
   const [editorInstance, setEditorInstance] = useAtom(editorInstanceAtom);
@@ -13,6 +13,7 @@ export function EditorComponent() {
   const [isMounted, setIsMounted] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
+  const setCheckState = useSetAtom(checkStateAtom);
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
 
   useEffect(() => {
@@ -62,65 +63,110 @@ export function EditorComponent() {
   }, [webContainer, editorInstance]);
 
   function checkHandle() {
-    const staticCheckerCode = `
-      const staticCheckers = [
-        {
-          description: "コードに 'console.log' が含まれているかチェック",
-          check: (code) => code.includes("console.log"),
-          message: "'console.log' を含めてください！",
-        },
-      ];
-    `;
-
-    const dynamicCheckerCode = `
-      const dynamicCheckers = [
-        {
-          description: "出力に 'Hello' が含まれているかチェック",
-          check: (out) => out.includes("Hello"),
-          message: "出力に 'Hello' を含めてください！",
-        },
-      ];
-    `;
-
     if (!webContainer) {
       console.error("webContainer が null です。処理を中断します。");
+      setCheckState({
+        status: "error",
+        message:
+          "WebContainerが初期化されていません。しばらく待ってからもう一度お試しください。",
+      });
       return;
     }
 
-    webContainer
-      .spawn("node", [
-        "-e",
-        `
-      const { check } = require('./check.js');
-      
-      ${staticCheckerCode}
-      ${dynamicCheckerCode}
-      
-      const codeToCheck = \`${content}\`;
-      
-      const result = check(codeToCheck, staticCheckers, dynamicCheckers);
-      
-      console.log('チェック結果:', JSON.stringify(result, null, 2));
-      
-      if (result.status === "success") {
-        console.log("🦈 おめでとう！全てのチェックに合格したよ！");
-      } else if (result.failedChecker) {
-        console.log("🦈 残念！チェックに失敗したよ...");
-        console.log("理由: " + (result.failedChecker.message || result.failedChecker.description));
+    if (!problem) {
+      console.error("問題データが null です。処理を中断します。");
+      setCheckState({
+        status: "error",
+        message: "問題データが見つかりません。ページを再読み込みしてください。",
+      });
+      return;
+    }
+
+    // チェック中状態をセット
+    setCheckState({ status: "checking" });
+
+    // 静的チェックを実行する
+    const staticCheckers = problem.checkers.static;
+    for (const checker of staticCheckers) {
+      if (!checker.check(content)) {
+        console.error("静的チェックに失敗:", checker.message);
+        setCheckState({
+          status: "error",
+          message: checker.message || "静的チェックに失敗しました",
+          checker,
+        });
+        return;
       }
-    `,
-      ])
+    }
+
+    // コードを実行し、出力を受け取る
+    let output = "";
+    const endMarker = "__EOF__";
+
+    webContainer
+      .spawn("npx", ["tsc", "--outDir", "dist"])
+      .then(() => {
+        return webContainer.spawn("node", ["codeRunner.js", content]);
+      })
       .then((process: { output: ReadableStream }) => {
-        process.output.pipeTo(
-          new WritableStream({
-            write(data) {
-              console.log(data);
-            },
-          }),
-        );
+        const reader = process.output.getReader();
+
+        // 再帰的にstreamを読み込む
+        return new Promise((resolve) => {
+          function readChunk() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("読み込み完了:", output);
+                resolve(output);
+                return;
+              }
+
+              const chunk = value || "";
+              output += chunk;
+
+              // 終端マーカーが見つかったらストリームを閉じる
+              if (output.includes(endMarker)) {
+                // 終端マーカーを削除
+                output = output.replace(endMarker, "").trim();
+                console.log("終端マーカーを検出、読み込み完了:", output);
+                resolve(output);
+                return;
+              }
+
+              readChunk();
+            });
+          }
+
+          readChunk();
+        });
+      })
+      .then((finalOutput) => {
+        // finalOutputを使って動的チェックを実行
+        const dynamicCheckers = problem.checkers.dynamic;
+        for (const checker of dynamicCheckers) {
+          if (!checker.check(finalOutput as string)) {
+            console.error("動的チェックに失敗:", checker.message);
+            setCheckState({
+              status: "error",
+              message: checker.message || "動的チェックに失敗しました",
+              checker,
+            });
+            return;
+          }
+        }
+
+        console.log("全チェック通過！おめでとう！");
+        setCheckState({
+          status: "success",
+          message: "おめでとう！全てのチェックに合格したよ🦈",
+        });
       })
       .catch((error: Error) => {
         console.error("チェック実行中にエラーが発生:", error);
+        setCheckState({
+          status: "error",
+          message: `エラーが発生しました: ${error.message}`,
+        });
       });
   }
 
@@ -144,9 +190,7 @@ export function EditorComponent() {
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
       run: function (): void {
-        console.error(
-          "WebContainerがまだ準備できていません🦈 少し待ってからもう一度試してね！",
-        );
+        checkHandle();
       },
     });
   }
@@ -191,8 +235,12 @@ export function EditorComponent() {
       </div>
 
       <div className="flex justify-between items-center px-4 py-2 bg-[#333] text-white">
-        <EditorHoverButton mode="reset" editorInstance={editorInstance} />
-        <EditorHoverButton mode="answer" />
+        <EditorHoverButton
+          onClick={() => {}}
+          mode="reset"
+          editorInstance={editorInstance}
+        />
+        <EditorHoverButton onClick={() => checkHandle()} mode="answer" />
         <SubmitButton onClick={() => checkHandle()} />
       </div>
 

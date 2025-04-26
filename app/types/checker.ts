@@ -18,7 +18,7 @@ export interface DynamicChecker {
   // ユーザに対して表示されるメッセージ
   message?: string;
 }
-type Checker = StaticChecker | DynamicChecker;
+export type Checker = StaticChecker | DynamicChecker;
 /**
  * ユーザの入力したコードに対して行われるチェックの結果を表すオブジェクト。
  */

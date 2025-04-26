@@ -34,7 +34,7 @@ const Problems: React.FC = () => {
     (async () => {
       try {
         const container = await WebContainer.boot();
-        await container.mount(files.files);
+        await container.mount(files);
 
         const installProcess = await container.spawn("npm", ["install"]);
         await installProcess.exit;
@@ -56,7 +56,6 @@ const Problems: React.FC = () => {
           "--outDir",
           ".",
           "codeRunner.ts",
-          "check.ts",
         ]);
 
         const tscExitCode = await tscProcess.exit;
