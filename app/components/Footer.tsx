@@ -1,7 +1,11 @@
 import React from "react";
 import { SlideCheckButton } from "./checkSlideButton";
+import { useAtom } from "jotai";
+import { nowProblemNumberAtom } from "~/atoms";
 
 export function Footer() {
+  const [nowProblemNumber] = useAtom(nowProblemNumberAtom);
+  const progress = nowProblemNumber < 2 ? 0 : (nowProblemNumber / 8) * 100;
   return (
     <footer
       style={{
@@ -39,7 +43,7 @@ export function Footer() {
         >
           <div
             style={{
-              width: "20%", // プログレスの進捗（仮に50%）
+              width: `${progress}%`, // プログレスの進捗（仮に50%）
               height: "100%",
               backgroundColor: "#8AC75A", // プログレスバーの色
             }}
