@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Slide } from "~/components/slide";
 
 const ProblemIntro: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, index } = useParams<{ id: string; index: string }>();
-  console.log(id);
 
   return <Slide id={Number(index)} />;
 };
