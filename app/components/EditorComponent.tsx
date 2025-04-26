@@ -2,7 +2,7 @@ import Editor from "@monaco-editor/react";
 import { useAtom } from "jotai";
 import type * as monaco from "monaco-editor";
 import { useEffect, useState } from "react";
-import { problemAtom, webContainerAtom } from "~/atoms";
+import { checkStateAtom, problemAtom, webContainerAtom } from "~/atoms";
 import { editorContentAtom, editorInstanceAtom } from "../atoms";
 import { EditorHoverButton } from "./EditorHoverButton";
 import { SubmitButton } from "./SubmitButton";
@@ -13,6 +13,7 @@ export function EditorComponent() {
   const [isMounted, setIsMounted] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
+  const [, setCheckState] = useAtom(checkStateAtom);
 
   useEffect(() => {
     setIsMounted(true);
@@ -27,20 +28,36 @@ export function EditorComponent() {
   function checkHandle() {
     if (!webContainer) {
       console.error("webContainer が null です。処理を中断します。");
+      setCheckState({
+        status: "error",
+        message:
+          "WebContainerが初期化されていません。しばらく待ってからもう一度お試しください。",
+      });
       return;
     }
 
     if (!problem) {
       console.error("問題データが null です。処理を中断します。");
+      setCheckState({
+        status: "error",
+        message: "問題データが見つかりません。ページを再読み込みしてください。",
+      });
       return;
     }
+
+    // チェック中状態をセット
+    setCheckState({ status: "checking" });
 
     // 静的チェックを実行する
     const staticCheckers = problem.checkers.static;
     for (const checker of staticCheckers) {
       if (!checker.check(content)) {
-        // TODO: atom で error を管理、ポップアップを表示
         console.error("静的チェックに失敗:", checker.message);
+        setCheckState({
+          status: "error",
+          message: checker.message || "静的チェックに失敗しました",
+          checker,
+        });
         return;
       }
     }
@@ -92,14 +109,27 @@ export function EditorComponent() {
         for (const checker of dynamicCheckers) {
           if (!checker.check(finalOutput as string)) {
             console.error("動的チェックに失敗:", checker.message);
+            setCheckState({
+              status: "error",
+              message: checker.message || "動的チェックに失敗しました",
+              checker,
+            });
             return;
           }
         }
 
         console.log("全チェック通過！おめでとう！");
+        setCheckState({
+          status: "success",
+          message: "おめでとう！全てのチェックに合格したよ🦈",
+        });
       })
       .catch((error: Error) => {
         console.error("チェック実行中にエラーが発生:", error);
+        setCheckState({
+          status: "error",
+          message: `エラーが発生しました: ${error.message}`,
+        });
       });
   }
 
@@ -120,7 +150,8 @@ export function EditorComponent() {
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
       run: function (): void {
-        alert(content);
+        // alert(content)の代わりにチェック処理を実行
+        checkHandle();
       },
     });
   }

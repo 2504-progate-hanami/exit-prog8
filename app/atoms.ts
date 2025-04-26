@@ -1,6 +1,7 @@
+import type { WebContainer } from "@webcontainer/api";
 import { atom } from "jotai";
 import type * as monaco from "monaco-editor";
-import type { WebContainer } from "@webcontainer/api";
+import type { Checker } from "./types/checker";
 import type { Problem } from "./types/problem";
 
 export const editorInstanceAtom =
@@ -13,3 +14,12 @@ export const editorContentAtom = atom<string>(
 export const webContainerAtom = atom<WebContainer | null>(null);
 
 export const problemAtom = atom<Problem | null>(null);
+
+// チェック結果を管理するための atom
+export type CheckState =
+  | { status: "idle" }
+  | { status: "checking" }
+  | { status: "success"; message: string }
+  | { status: "error"; message: string; checker?: Checker };
+
+export const checkStateAtom = atom<CheckState>({ status: "idle" });
