@@ -78,11 +78,11 @@ export default function Home() {
         <Panel defaultSize={50} minSize={30}>
           <PanelGroup direction="vertical">
             <Panel defaultSize={40} minSize={20}>
-              <ConsoleUI mode="console" problemId={1} />
+              <ConsoleUI mode="console" />
             </Panel>
             <PanelResizeHandle />
             <Panel defaultSize={30} minSize={20}>
-              <ConsoleUI mode="sample" problemId={2} />
+              <ConsoleUI mode="sample" />
             </Panel>
           </PanelGroup>
         </Panel>
