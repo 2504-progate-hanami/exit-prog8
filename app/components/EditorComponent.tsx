@@ -41,7 +41,7 @@ export function EditorComponent() {
     webContainer
       .spawn("npx", ["tsc", "--outDir", "dist"])
       .then(() => {
-        return webContainer.spawn("node", ["dist/codeRunner.js", content]);
+        return webContainer.spawn("node", ["codeRunner.js", content]);
       })
       .then((process: { output: ReadableStream }) => {
         process.output.pipeTo(
