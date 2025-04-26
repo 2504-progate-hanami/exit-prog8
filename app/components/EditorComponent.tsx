@@ -2,12 +2,7 @@ import Editor from "@monaco-editor/react";
 import { useAtom, useSetAtom } from "jotai";
 import type * as monaco from "monaco-editor";
 import { useEffect, useState } from "react";
-import {
-  checkStateAtom,
-  problemAtom,
-  webContainerAtom,
-  anomalyPoolAtom,
-} from "~/atoms";
+import { checkStateAtom, problemAtom, webContainerAtom } from "~/atoms";
 import { editorContentAtom, editorInstanceAtom } from "../atoms";
 import { EditorHoverButton } from "./EditorHoverButton";
 import { SubmitButton } from "./SubmitButton";
@@ -18,7 +13,6 @@ export function EditorComponent() {
   const [isMounted, setIsMounted] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
-  const [anomalyPool] = useAtom(anomalyPoolAtom);
   const setCheckState = useSetAtom(checkStateAtom);
 
   useEffect(() => {
@@ -32,9 +26,9 @@ export function EditorComponent() {
   }, [problem, setContent]);
 
   // 異変プールからランダムに異変を選んで実行
-  useEffect(() => {
-    console.log("現在のanomalyPool:", anomalyPool);
-  }, [anomalyPool]);
+  // useEffect(() => {
+  //   console.log("現在のanomalyPool:", anomalyPool);
+  // }, [anomalyPool]);
 
   useEffect(() => {
     if (webContainer && editorInstance) {
