@@ -61,7 +61,6 @@ export function SubmitButton({
         ></div>
       </div>
 
-      {/* ポップアップ */}
       {showPopup && (
         <div
           className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 ${isSuccess ? "border-green-500" : "border-red-500"} text-black px-4 py-10 rounded shadow-lg z-50 max-w-md`}

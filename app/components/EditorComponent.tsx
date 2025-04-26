@@ -1,5 +1,5 @@
 import Editor from "@monaco-editor/react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import type * as monaco from "monaco-editor";
 import { useEffect, useState } from "react";
 import { checkStateAtom, problemAtom, webContainerAtom } from "~/atoms";
@@ -13,7 +13,8 @@ export function EditorComponent() {
   const [isMounted, setIsMounted] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
-  const [, setCheckState] = useAtom(checkStateAtom);
+  const setCheckState = useSetAtom(checkStateAtom);
+  const [showSubmitPopup, setShowSubmitPopup] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -24,6 +25,42 @@ export function EditorComponent() {
       setContent(problem.initialCode);
     }
   }, [problem, setContent]);
+
+  useEffect(() => {
+    if (webContainer && editorInstance) {
+      console.log("WebContainer準備完了！エディタアクションを設定するよ🦈");
+
+      const actionId = "execute-custom-action-with-webcontainer";
+
+      // @ts-expect-error Monaco Editor の actions API には型定義がないため
+      const actions = editorInstance.getActions();
+      // @ts-expect-error actions.find にも型定義がないため
+      const existingAction = actions.find((action) => action.id === actionId);
+      if (existingAction) {
+        // @ts-expect-error removeAction メソッドにも型定義がないため
+        editorInstance.removeAction(actionId);
+      }
+
+      editorInstance.addAction({
+        id: actionId,
+        label: "Execute Custom Action",
+        keybindings: [
+          // @ts-expect-error monaco.KeyMod と monaco.KeyCode の型定義がないため
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        ],
+        contextMenuGroupId: "navigation",
+        contextMenuOrder: 1.5,
+        run: function (): void {
+          checkHandle();
+          setShowSubmitPopup(true);
+        },
+      });
+
+      console.log(
+        "エディタアクションの設定完了！Ctrl+Enterでコード実行できるようになったよ🦈",
+      );
+    }
+  }, [webContainer, editorInstance]);
 
   function checkHandle() {
     if (!webContainer) {
@@ -135,7 +172,7 @@ export function EditorComponent() {
 
   function handleEditorDidMount(
     editor: monaco.editor.IStandaloneCodeEditor,
-    monaco: typeof import("monaco-editor"),
+    monacoInstance: typeof monaco,
   ): void {
     setEditorInstance(editor);
 
@@ -144,17 +181,23 @@ export function EditorComponent() {
     });
 
     editor.addAction({
-      id: "action",
-      label: "Execute Custom Action",
-      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      id: "temporary-action",
+      label: "Execute Custom Action (Loading...)",
+
+      keybindings: [
+        monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KeyS, // Ctrl+EnterからCtrl+Sに変更して競合回避
+      ],
       contextMenuGroupId: "navigation",
       contextMenuOrder: 1.5,
       run: function (): void {
-        // alert(content)の代わりにチェック処理を実行
         checkHandle();
       },
     });
   }
+
+  const closeSubmitPopup = () => {
+    setShowSubmitPopup(false);
+  };
 
   if (!isMounted) {
     return (
@@ -165,7 +208,7 @@ export function EditorComponent() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#1e1e1e]">
+    <div className="flex flex-col h-full bg-[#1e1e1e]">
       <div className="flex justify-between items-center px-4 py-2 bg-gray-700 text-white shadow-md">
         <span>script.js</span>
         <button className="text-white"></button>
@@ -200,6 +243,22 @@ export function EditorComponent() {
         <EditorHoverButton onClick={() => checkHandle()} mode="answer" />
         <SubmitButton onClick={() => checkHandle()} />
       </div>
+
+      {showSubmitPopup && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 border-red-500 text-black px-4 py-10 rounded shadow-lg">
+          <button
+            onClick={closeSubmitPopup}
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            aria-label="Close"
+          >
+            ✖
+          </button>
+          <strong className="font-bold">テストメッセージ</strong>
+          <span className="block sm:inline">
+            つまったときはスライドやヒントも確認してみましょう
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import type { DynamicChecker, StaticChecker } from "./checker";
 
 export interface Problem {
   name: string;
-  instructions: Array<ProblemInstruction>;
+  instructions: Array<ProblemInstruction>; //スライドの配列
   procedure: HTMLElement;
   initialCode: string;
   answerCode: string;

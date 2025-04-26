@@ -3,15 +3,17 @@ import type { JSX } from "react";
 import type { IStandaloneCodeEditor } from "monaco-editor"; // 型をインポート
 import { useAtom } from "jotai";
 import { editorContentAtom } from "~/atoms"; // editorContentAtomをインポート
+import { DiffEditorComponents } from "./DiffEditorComponents"; // DiffEditorComponentsをインポート
 
 let defaultContentFlag = 0;
 
 export function EditorHoverButton({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClick,
   mode,
   editorInstance,
 }: {
-  onClick: () => void;
+  onClick?: () => void;
   mode: "reset" | "answer";
   editorInstance?: IStandaloneCodeEditor | null;
 }): JSX.Element {
@@ -25,11 +27,7 @@ export function EditorHoverButton({
   }
 
   const handleResetClick = () => {
-    if (mode === "reset") {
-      setIsModalOpen(true); // モーダルを開く
-    } else {
-      onClick();
-    }
+    setIsModalOpen(true);
   };
 
   const closeModal = () => setIsModalOpen(false);
@@ -50,7 +48,7 @@ export function EditorHoverButton({
         </div>
       </button>
 
-      {isModalOpen && (
+      {isModalOpen && mode === "reset" && (
         <div className="fixed inset-0 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg text-center text-black">
             <p>コードをこのページの最初の状態にリセットしますか？</p>
@@ -66,7 +64,6 @@ export function EditorHoverButton({
                 onClick={() => {
                   editorInstance?.setValue(defaultContent); // ここで設定している値にリセット
                   closeModal();
-                  onClick();
                 }}
               >
                 リセットする
@@ -74,6 +71,10 @@ export function EditorHoverButton({
             </div>
           </div>
         </div>
+      )}
+
+      {isModalOpen && mode === "answer" && (
+        <DiffEditorComponents onClose={closeModal} />
       )}
     </>
   );

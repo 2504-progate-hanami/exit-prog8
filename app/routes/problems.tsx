@@ -83,23 +83,26 @@ const Problems: React.FC = () => {
   }
 
   return (
-    <div>
-      <PanelGroup direction="horizontal" className="h-screen">
-        <Panel defaultSize={20} minSize={15}>
+    <div className="flex flex-col h-[calc(100vh-120px)] overflow-hidden p-0 m-0">
+      <PanelGroup
+        direction="horizontal"
+        className="flex-1 w-full overflow-hidden"
+      >
+        <Panel defaultSize={40} minSize={15}>
           <ProcedureComponent />
         </Panel>
         <PanelResizeHandle />
-        <Panel defaultSize={30} minSize={20}>
+        <Panel defaultSize={70} minSize={20}>
           <EditorComponent />
         </Panel>
         <PanelResizeHandle />
-        <Panel defaultSize={50} minSize={30}>
+        <Panel defaultSize={40} minSize={30}>
           <PanelGroup direction="vertical">
-            <Panel defaultSize={40} minSize={20}>
+            <Panel defaultSize={10}>
               <ConsoleUI mode="console" />
             </Panel>
             <PanelResizeHandle />
-            <Panel defaultSize={30} minSize={20}>
+            <Panel defaultSize={10}>
               <ConsoleUI mode="sample" />
             </Panel>
           </PanelGroup>

@@ -5,14 +5,19 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
+  useLocation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { atom, useAtom } from "jotai";
 
 const queryClient = new QueryClient();
+
+export const noFooterPagesAtom = atom<string[]>(["/problems"]);
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -28,6 +33,13 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const [FooterPages] = useAtom(noFooterPagesAtom);
+
+  const showFooter = FooterPages.some((path) =>
+    location.pathname.startsWith(path),
+  );
+
   return (
     <html lang="ja">
       <head>
@@ -39,8 +51,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header />
         <QueryClientProvider client={queryClient}>
-          {children}
+          <main
+            style={{
+              flex: "0 1 auto",
+              maxHeight: !showFooter ? "100vh" : "calc(100vh - 120px)",
+              overflowY: "auto",
+            }}
+          >
+            {children}
+          </main>
         </QueryClientProvider>
+        {showFooter && <Footer />}
         <ScrollRestoration />
         <Scripts />
       </body>
