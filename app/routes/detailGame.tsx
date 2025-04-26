@@ -1,10 +1,13 @@
 import { json } from "@remix-run/node";
+import { useNavigate } from "react-router-dom";
+import { HomeButton } from "./homeButton";
 
 export async function loader() {
   return json({ message: "DetailGame loaded successfully" });
 }
 
 export default function DetailGame() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center py-12 bg-gray-100 font-sans">
       <h1 className="text-2xl md:text-3xl text-gray-800 mb-8 text-center">
@@ -55,12 +58,11 @@ export default function DetailGame() {
           があなたを待ち受けています。
         </p>
         <div className="flex justify-center mt-8">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300"
-            onClick={() => alert("挑戦、お待ちしています！")}
-          >
-            いざ、レッスンへ！
-          </button>
+          <HomeButton
+            detail={"いざ、レッスンへ！"}
+            onC={() => navigate("/problems/sample")}
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline uppercase tracking-wider"
+          />
         </div>
       </div>
     </div>
