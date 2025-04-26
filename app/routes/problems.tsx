@@ -110,7 +110,9 @@ const Problems: React.FC = () => {
     })();
 
     // 異変の抽選と設定処理
-    if (triggerAnomaly()) {
+    const anomalyRatio = parseFloat(import.meta.env.VITE_ANOMALY_RATIO) ?? 0.6;
+    console.log("異変の発生率:", anomalyRatio);
+    if (triggerAnomaly(anomalyRatio)) {
       const selectedAnomalies = getRandomAnomalies(1);
       setAnomalyPool(selectedAnomalies);
 
