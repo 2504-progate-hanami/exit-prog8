@@ -37,8 +37,8 @@ const Problems: React.FC = () => {
       // 開発者モード用の隠しキーボードショートカット (Ctrl+Alt+/)
       if (event.ctrlKey && event.altKey && event.key === "/") {
         event.preventDefault();
-        setIsDebugMode(!isDebugMode);
-        console.log(`デバッグモード: ${!isDebugMode ? "ON" : "OFF"}`);
+        setIsDebugMode((prev) => !prev);
+        console.log(`デバッグモード: ${isDebugMode ? "OFF" : "ON"}`);
       }
     },
     [isDebugMode, setIsDebugMode],
