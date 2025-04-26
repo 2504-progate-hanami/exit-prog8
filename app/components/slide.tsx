@@ -1,9 +1,12 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import type { ProblemInstruction } from "../types/problem";
 import type { CSSProperties, JSX } from "react";
+import { useAtom } from "jotai";
+import { isSlideModalAtom } from "~/atoms";
 
 export function Slide({ id }: { id: number }): JSX.Element {
   const [lesson, setLesson] = useState<ProblemInstruction | null>(null);
+  const [, setIsModalOpen] = useAtom(isSlideModalAtom);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -11,6 +14,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsVisible(false);
+        setIsModalOpen(false);
       }
     };
 
@@ -24,6 +28,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
     const handleClickOutside = (e: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
         setIsVisible(false);
+        setIsModalOpen(false);
       }
     };
 
@@ -83,7 +88,10 @@ export function Slide({ id }: { id: number }): JSX.Element {
           title={lesson.title}
           description={lesson.description}
           name={`Lesson ${id}`}
-          onClose={() => setIsVisible(false)}
+          onClose={() => {
+            setIsVisible(false);
+            setIsModalOpen(false);
+          }}
         />
       </div>
     </div>

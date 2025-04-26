@@ -1,6 +1,13 @@
+import { useAtom } from "jotai";
+import { isSlideModalAtom } from "~/atoms";
+
 export function SlideCheckButton() {
+  const [isSlideModal, setIsSlideModal] = useAtom(isSlideModalAtom);
   return (
-    <button className="bg-teal-300 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded shadow-md flex items-center justify-center">
+    <button
+      className="bg-teal-300 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded shadow-md flex items-center justify-center"
+      onClick={() => setIsSlideModal(!isSlideModal)}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-5 w-5 mr-2"
