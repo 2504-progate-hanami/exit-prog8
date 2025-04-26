@@ -36,7 +36,7 @@ export function Header() {
     <header className="bg-white shadow-lg py-2 px-4">
       <div className="container mx-auto flex items-center justify-between">
         {/* 左上のアプリ名 */}
-        <Link to="/home" className="text-lg font-bold text-gray-800">
+        <Link to="/" className="text-lg font-bold text-gray-800">
           8
         </Link>
 
