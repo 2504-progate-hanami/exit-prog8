@@ -1,25 +1,24 @@
 import { WebContainer } from "@webcontainer/api";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router-dom";
 import {
-  anomalyPoolAtom,
+  isDebugModeAtom,
+  isSlideModalAtom,
   problemAtom,
   webContainerAtom,
-  isSlideModalAtom,
-  isDebugModeAtom,
 } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { DebugModePopup } from "~/components/DebugModePopup";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
 import { Slide } from "~/components/slide";
-import { files } from "~/files";
 import {
   getRandomAnomalies,
   triggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
+import { files } from "~/files";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +27,6 @@ const Problems: React.FC = () => {
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
   const [isSlideModal] = useAtom(isSlideModalAtom);
-  const setAnomalyPool = useSetAtom(anomalyPoolAtom);
   const [isDebugMode, setIsDebugMode] = useAtom(isDebugModeAtom);
 
   // キーボードショートカットの処理
@@ -114,7 +112,6 @@ const Problems: React.FC = () => {
     console.log("異変の発生率:", anomalyRatio);
     if (triggerAnomaly(anomalyRatio)) {
       const selectedAnomalies = getRandomAnomalies(1);
-      setAnomalyPool(selectedAnomalies);
 
       // 選択した異変を実行
       selectedAnomalies.forEach((anomaly) => {
