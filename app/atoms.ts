@@ -20,3 +20,4 @@ export const isDiffModeAtom = atom<boolean>(false);
 
 export const isSlideModalAtom = atom<boolean>(true);
 export const anomalyPoolAtom = atom<Anomaly[]>([]);
+export const isSubmitPopupOpenAtom = atom<boolean>(false);

@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { JSX } from "react";
 import type { IStandaloneCodeEditor } from "monaco-editor"; // 型をインポート
 import { useAtom } from "jotai";
-import { editorContentAtom } from "~/atoms"; // editorContentAtomをインポート
+import { editorContentAtom, isSubmitPopupOpenAtom } from "~/atoms"; // editorContentAtomをインポート
 import { DiffEditorComponents } from "./DiffEditorComponents"; // DiffEditorComponentsをインポート
 
 let defaultContentFlag = 0;
@@ -20,6 +20,7 @@ export function EditorHoverButton({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultContent, setDefaultContent] = useState(""); // 初期値を保持するためのstate
   const [editorContent] = useAtom(editorContentAtom); // 現在のエディター内容を取得
+  const [, setIsSubtmitPopupOpen] = useAtom(isSubmitPopupOpenAtom);
 
   if (defaultContentFlag == 0) {
     setDefaultContent(editorContent);
@@ -27,10 +28,13 @@ export function EditorHoverButton({
   }
 
   const handleResetClick = () => {
+    setIsSubtmitPopupOpen(false);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>

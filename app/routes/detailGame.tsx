@@ -1,9 +1,3 @@
-import { json } from "@remix-run/node";
-
-export async function loader() {
-  return json({ message: "DetailGame loaded successfully" });
-}
-
 export default function DetailGame() {
   return (
     <div className="flex flex-col items-center py-12 bg-gray-100 font-sans">
