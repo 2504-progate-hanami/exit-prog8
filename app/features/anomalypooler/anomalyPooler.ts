@@ -1,12 +1,8 @@
-// filepath: /home/yotu/github/exit-prog8/app/features/anomalypooler/anomalyPooler.ts
 import type { Anomaly } from "~/types/anomaly";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
 
-// 全ての異変をここに登録（新しい異変を追加したらここにもインポートして追加する）
-export const anomalies: Anomaly[] = [
-  rainbowHeader,
-  // 将来的にここに他の異変を追加していく
-];
+// 異変を作成したら、ここに追加してください
+export const anomalies: Anomaly[] = [rainbowHeader];
 
 /**
  * 異変プールから指定された数の異変をランダムに選択する
@@ -23,10 +19,11 @@ export function getRandomAnomalies(count: number = 1): Anomaly[] {
 }
 
 /**
- * 指定した確率で異変を発生させるかどうかを決定する
+ * 異変を発生させる。
+ * 確率を指定することで、異変が発生する確率を調整できる。
  * @param probability 発生確率（0.0〜1.0）
  * @returns 発生させる場合はtrue、そうでない場合はfalse
  */
-export function shouldTriggerAnomaly(probability: number = 0.6): boolean {
+export function triggerAnomaly(probability: number = 0.6): boolean {
   return Math.random() < probability;
 }

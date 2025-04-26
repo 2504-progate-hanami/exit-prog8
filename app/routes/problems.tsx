@@ -16,7 +16,7 @@ import { Slide } from "~/components/slide";
 import { files } from "~/files";
 import {
   getRandomAnomalies,
-  shouldTriggerAnomaly,
+  triggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
 
 const Problems: React.FC = () => {
@@ -86,7 +86,7 @@ const Problems: React.FC = () => {
     })();
 
     // 異変の抽選と設定処理
-    if (shouldTriggerAnomaly()) {
+    if (triggerAnomaly()) {
       const selectedAnomalies = getRandomAnomalies(1);
       setAnomalyPool(selectedAnomalies);
 
