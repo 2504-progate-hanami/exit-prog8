@@ -6,9 +6,7 @@ import type { Problem } from "./types/problem";
 
 export const editorInstanceAtom =
   atom<monaco.editor.IStandaloneCodeEditor | null>(null);
-export const editorContentAtom = atom<string>(
-  '// "Hello, World!"とコンソールに出力するコードを書いてください\n',
-);
+export const editorContentAtom = atom<string>("// fallback message 😭");
 export const webContainerAtom = atom<WebContainer | null>(null);
 export const problemAtom = atom<Problem | null>(null);
 export type CheckState =
