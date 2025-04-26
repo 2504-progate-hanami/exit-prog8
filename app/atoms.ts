@@ -16,3 +16,5 @@ export type CheckState =
   | { status: "error"; message: string; checker?: Checker };
 export const checkStateAtom = atom<CheckState>({ status: "idle" });
 export const isDiffModeAtom = atom<boolean>(false);
+
+export const isSlideModalAtom = atom<boolean>(true);

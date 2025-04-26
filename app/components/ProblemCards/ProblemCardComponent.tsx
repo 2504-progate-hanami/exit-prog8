@@ -1,3 +1,6 @@
+import { useAtom } from "jotai";
+import { isSlideModalAtom } from "~/atoms";
+
 type card = {
   where: string;
   problemProps: string;
@@ -5,6 +8,7 @@ type card = {
 };
 
 export function Card({ where, problemProps, problem }: card) {
+  const [isModalOpen, setIsModalOpen] = useAtom(isSlideModalAtom);
   return (
     <div className="bg-gray-100 p-6 rounded-md shadow-md w-full max-w-md">
       <div className="flex items-center mb-4">
@@ -31,7 +35,10 @@ export function Card({ where, problemProps, problem }: card) {
         <span className="ml-2 text-gray-700 text-sm">{problem}</span>
       </div>
 
-      <button className="bg-teal-300 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded-md shadow-md flex items-center justify-center w-full">
+      <button
+        className="bg-teal-300 hover:bg-teal-400 text-white font-bold py-2 px-4 rounded-md shadow-md flex items-center justify-center w-full"
+        onClick={() => setIsModalOpen(!isModalOpen)}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5 mr-2"
