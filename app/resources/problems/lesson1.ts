@@ -3,20 +3,7 @@ import type { Problem } from "~/types/problem";
 const procedure1 = document.createElement("div");
 procedure1.innerHTML = `
   <p>この問題では、JavaScript の三項演算子（条件演算子）について学びます。</p>
-  <p>三項演算子は <code>条件式 ? 真の場合の値 : 偽の場合の値</code> という構文で、if-else文を短く書くことができる便利な機能だよ～</p>
-  <p>例えば次のコードは：</p>
-  <pre>
-  let message;
-  if (age >= 20) {
-    message = "成人です";
-  } else {
-    message = "未成年です";
-  }
-  </pre>
-  <p>三項演算子を使うとこんな感じにシンプルに書けるよ：</p>
-  <pre>
-  let message = age >= 20 ? "成人です" : "未成年です";
-  </pre>
+  <p>三項演算子は <b>条件式 ? 真の場合の値 : 偽の場合の値</b> という構文で、if-else文を短く書くことができる便利な機能です！</p>
   <p>この問題では、与えられた年齢(age)に応じてメッセージを出力するプログラムを三項演算子を使って書いてみよう！</p>
 `;
 
