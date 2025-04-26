@@ -1,8 +1,6 @@
 /**
  * チェッカーランナースクリプト - コードのチェックを実行する
- *
- * 使用方法:
- * ts-node runChecker.ts '<コード>' '<staticCheckersJSON>' '<dynamicCheckersJSON>'
+ * （このファイルは WebContainer 側で呼び出されます）
  *
  * 引数:
  * 1. コード: チェックするJavaScript/TypeScriptコード

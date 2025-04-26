@@ -1,9 +1,5 @@
 // WebContainer用のスクリプトファイルを実際のファイルとして管理する
-import runCheckerCode from "./features/runchecker/runChecker.ts?raw";
 import codeRunnerCode from "./features/coderunner/codeRunner.ts?raw";
-import checkCode from "./features/checker/check.ts?raw";
-
-import checkerTypeCode from "./types/checker.ts?raw";
 
 const packageJson = `{
   "name": "ts-environment",
@@ -30,48 +26,11 @@ const tsConfig = `{
 }`;
 
 export const files = {
-  features: {
-    directory: {
-      checker: {
-        directory: {
-          "check.ts": {
-            file: {
-              contents: checkCode,
-            },
-          },
-        },
-      },
-      coderunner: {
-        directory: {
-          "codeRunner.ts": {
-            file: {
-              contents: codeRunnerCode,
-            },
-          },
-        },
-      },
-      runchecker: {
-        directory: {
-          "runChecker.ts": {
-            file: {
-              contents: runCheckerCode,
-            },
-          },
-        },
-      },
+  "codeRunner.ts": {
+    file: {
+      contents: codeRunnerCode,
     },
   },
-
-  types: {
-    directory: {
-      "checker.ts": {
-        file: {
-          contents: checkerTypeCode,
-        },
-      },
-    },
-  },
-
   "package.json": {
     file: {
       contents: packageJson,
