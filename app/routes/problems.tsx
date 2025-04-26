@@ -86,21 +86,21 @@ const Problems: React.FC = () => {
   return (
     <div>
       <PanelGroup direction="horizontal" className="h-screen">
-        <Panel defaultSize={20} minSize={15}>
+        <Panel defaultSize={40} minSize={15}>
           <ProcedureComponent />
         </Panel>
         <PanelResizeHandle />
-        <Panel defaultSize={30} minSize={20}>
+        <Panel defaultSize={70} minSize={20}>
           <EditorComponent />
         </Panel>
         <PanelResizeHandle />
         <Panel defaultSize={50} minSize={30}>
           <PanelGroup direction="vertical">
-            <Panel defaultSize={40} minSize={20}>
+            <Panel defaultSize={40}>
               <ConsoleUI mode="console" />
             </Panel>
             <PanelResizeHandle />
-            <Panel defaultSize={30} minSize={20}>
+            <Panel defaultSize={40}>
               <ConsoleUI mode="sample" />
             </Panel>
           </PanelGroup>

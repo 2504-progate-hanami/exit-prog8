@@ -8,6 +8,7 @@ import { DiffEditorComponents } from "./DiffEditorComponents"; // DiffEditorComp
 let defaultContentFlag = 0;
 
 export function EditorHoverButton({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onClick,
   mode,
   editorInstance,
@@ -63,7 +64,6 @@ export function EditorHoverButton({
                 onClick={() => {
                   editorInstance?.setValue(defaultContent); // ここで設定している値にリセット
                   closeModal();
-                  onClick();
                 }}
               >
                 リセットする
