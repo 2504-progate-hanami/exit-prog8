@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>
+        <Footer />
         <ScrollRestoration />
         <Scripts />
       </body>
