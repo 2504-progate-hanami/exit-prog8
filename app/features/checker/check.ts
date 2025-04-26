@@ -3,7 +3,7 @@ import type {
   DynamicChecker,
   CheckResult,
 } from "../../types/checker";
-import { runCode } from "../code-runner/codeRunner";
+import { runCode } from "../coderunner/codeRunner";
 
 /**
  * ユーザの入力に対し、テストを行う。

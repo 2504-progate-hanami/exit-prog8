@@ -34,13 +34,13 @@ const Problems: React.FC = () => {
     (async () => {
       try {
         const container = await WebContainer.boot();
-        await container.mount(files.files);
+        await container.mount(files);
 
         const installProcess = await container.spawn("npm", ["install"]);
         await installProcess.exit;
 
         const catCodeRunnerProcess = await container.spawn("cat", [
-          "codeRunner.ts",
+          "features/coderunner/codeRunner.ts",
         ]);
         catCodeRunnerProcess.output.pipeTo(
           new WritableStream({
@@ -55,8 +55,8 @@ const Problems: React.FC = () => {
           "tsc",
           "--outDir",
           ".",
-          "codeRunner.ts",
-          "check.ts",
+          "features/coderunner/codeRunner.ts",
+          "features/checker/check.ts",
         ]);
 
         const tscExitCode = await tscProcess.exit;

@@ -1,6 +1,6 @@
 // WebContainer用のスクリプトファイルを実際のファイルとして管理する
-import runCheckerCode from "./features/run-checker/runChecker.ts?raw";
-import codeRunnerCode from "./features/code-runner/codeRunner.ts?raw";
+import runCheckerCode from "./features/runchecker/runChecker.ts?raw";
+import codeRunnerCode from "./features/coderunner/codeRunner.ts?raw";
 import checkCode from "./features/checker/check.ts?raw";
 
 import checkerTypeCode from "./types/checker.ts?raw";
@@ -30,48 +30,56 @@ const tsConfig = `{
 }`;
 
 export const files = {
-  files: {
-    features: {
+  features: {
+    directory: {
       checker: {
-        "check.ts": {
-          file: {
-            contents: checkCode,
+        directory: {
+          "check.ts": {
+            file: {
+              contents: checkCode,
+            },
           },
         },
       },
-      "code-runner": {
-        "codeRunner.ts": {
-          file: {
-            contents: codeRunnerCode,
+      coderunner: {
+        directory: {
+          "codeRunner.ts": {
+            file: {
+              contents: codeRunnerCode,
+            },
           },
         },
       },
-      "run-checker": {
-        "runChecker.ts": {
-          file: {
-            contents: runCheckerCode,
+      runchecker: {
+        directory: {
+          "runChecker.ts": {
+            file: {
+              contents: runCheckerCode,
+            },
           },
         },
       },
     },
+  },
 
-    types: {
+  types: {
+    directory: {
       "checker.ts": {
         file: {
           contents: checkerTypeCode,
         },
       },
     },
+  },
 
-    "package.json": {
-      file: {
-        contents: packageJson,
-      },
+  "package.json": {
+    file: {
+      contents: packageJson,
     },
-    "tsconfig.json": {
-      file: {
-        contents: tsConfig,
-      },
+  },
+  "tsconfig.json": {
+    file: {
+      contents: tsConfig,
     },
   },
 };
