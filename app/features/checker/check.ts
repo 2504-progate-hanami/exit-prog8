@@ -2,7 +2,7 @@ import type {
   StaticChecker,
   DynamicChecker,
   CheckResult,
-} from "~/types/checker";
+} from "../../types/checker";
 import { runCode } from "../code-runner/codeRunner";
 
 /**

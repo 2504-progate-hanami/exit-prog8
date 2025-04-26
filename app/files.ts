@@ -3,6 +3,8 @@ import runCheckerCode from "./features/run-checker/runChecker.ts?raw";
 import codeRunnerCode from "./features/code-runner/codeRunner.ts?raw";
 import checkCode from "./features/checker/check.ts?raw";
 
+import checkerTypeCode from "./types/checker.ts?raw";
+
 const packageJson = `{
   "name": "ts-environment",
   "version": "1.0.0",
@@ -29,21 +31,38 @@ const tsConfig = `{
 
 export const files = {
   files: {
-    "codeRunner.ts": {
-      file: {
-        contents: codeRunnerCode,
+    features: {
+      checker: {
+        "check.ts": {
+          file: {
+            contents: checkCode,
+          },
+        },
+      },
+      "code-runner": {
+        "codeRunner.ts": {
+          file: {
+            contents: codeRunnerCode,
+          },
+        },
+      },
+      "run-checker": {
+        "runChecker.ts": {
+          file: {
+            contents: runCheckerCode,
+          },
+        },
       },
     },
-    "check.ts": {
-      file: {
-        contents: checkCode,
+
+    types: {
+      "checker.ts": {
+        file: {
+          contents: checkerTypeCode,
+        },
       },
     },
-    "runChecker.ts": {
-      file: {
-        contents: runCheckerCode,
-      },
-    },
+
     "package.json": {
       file: {
         contents: packageJson,
