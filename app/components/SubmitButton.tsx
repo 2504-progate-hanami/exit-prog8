@@ -1,7 +1,12 @@
 import { useAtom } from "jotai"; // jotaiのuseAtomを追加
 import type { JSX } from "react";
 import { useEffect, useState } from "react"; // useEffectを追加
-import { checkStateAtom, problemAtom, isSubmitPopupOpenAtom } from "~/atoms"; // checkStateAtomをインポート
+import {
+  checkStateAtom,
+  problemAtom,
+  isSubmitPopupOpenAtom,
+  activeAnomalyAtom,
+} from "~/atoms"; // checkStateAtomをインポート
 import { Link } from "react-router-dom";
 
 export function SubmitButton({
@@ -13,6 +18,7 @@ export function SubmitButton({
     isSubmitPopupOpenAtom,
   );
   const [checkState] = useAtom(checkStateAtom);
+  const [activeAnomaly] = useAtom(activeAnomalyAtom);
   const [popupMessage, setPopupMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [problem] = useAtom(problemAtom);
@@ -99,7 +105,7 @@ export function SubmitButton({
               <button
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
                 onClick={() => {
-                  console.log("戻るボタンがクリックされました");
+                  console.log(activeAnomaly);
                 }}
               >
                 ← 引き返す
