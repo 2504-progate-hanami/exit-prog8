@@ -36,8 +36,17 @@ export function EditorComponent() {
     }
 
     // 静的チェックを実行する
+    const staticCheckers = problem.checkers.static;
+    for (const checker of staticCheckers) {
+      if (!checker.check(content)) {
+        // TODO: atom で error を管理、ポップアップを表示
+        console.error("静的チェックに失敗:", checker.message);
+        return;
+      }
+    }
 
     // コードを実行し、出力を受け取る
+    let output = "";
     webContainer
       .spawn("npx", ["tsc", "--outDir", "dist"])
       .then(() => {
@@ -47,7 +56,7 @@ export function EditorComponent() {
         process.output.pipeTo(
           new WritableStream({
             write(data) {
-              console.log(data);
+              output += data;
             },
           }),
         );
@@ -57,6 +66,13 @@ export function EditorComponent() {
       });
 
     // 出力に対し、動的チェックを実行する
+    const dynamicCheckers = problem.checkers.dynamic;
+    for (const checker of dynamicCheckers) {
+      if (!checker.check(output)) {
+        console.error("動的チェックに失敗:", checker.message);
+        return;
+      }
+    }
   }
 
   function handleEditorDidMount(
