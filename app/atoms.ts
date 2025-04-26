@@ -27,3 +27,6 @@ export const isSubmitPopupOpenAtom = atom<boolean>(false);
 export const isDebugModeAtom = atom<boolean>(false);
 export const activeAnomalyAtom = atom<Anomaly | null>(null);
 export const debugAnomaliesAtom = atom<Anomaly[]>([]);
+
+export const nowProblemNumberAtom = atom<number>(0);
+

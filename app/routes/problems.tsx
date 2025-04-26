@@ -1,24 +1,28 @@
 import { WebContainer } from "@webcontainer/api";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router-dom";
 import {
-  isDebugModeAtom,
-  isSlideModalAtom,
+  anomalyPoolAtom,
   problemAtom,
   webContainerAtom,
+  isSlideModalAtom,
+  isDebugModeAtom,
+  editorContentAtom,
+  checkStateAtom,
+  nowProblemNumberAtom,
 } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { DebugModePopup } from "~/components/DebugModePopup";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
 import { Slide } from "~/components/slide";
+import { files } from "~/files";
 import {
   getRandomAnomalies,
   triggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
-import { files } from "~/files";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,8 +30,15 @@ const Problems: React.FC = () => {
 
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
-  const [isSlideModal] = useAtom(isSlideModalAtom);
+
+  const setAnomalyPool = useSetAtom(anomalyPoolAtom);
   const [isDebugMode, setIsDebugMode] = useAtom(isDebugModeAtom);
+
+  const [isSlideModal, setIsSlideModal] = useAtom(isSlideModalAtom);
+  const [pageKey, setPageKey] = useState<number>(Date.now());
+  const [, setEditorContent] = useAtom(editorContentAtom);
+  const [checkState, setCheckState] = useAtom(checkStateAtom);
+  const [nowProblemNumber, setNowProblemNumber] = useAtom(nowProblemNumberAtom);
 
   // キーボードショートカットの処理
   const handleKeyDown = useCallback(
@@ -57,6 +68,16 @@ const Problems: React.FC = () => {
       try {
         const problemModule = await import(`../resources/problems/${id}.ts`);
         setProblem(problemModule.default);
+        if (checkState.status === "success") {
+          setNowProblemNumber(nowProblemNumber + 1);
+          setCheckState({ status: "idle" });
+        }
+
+        if (problemModule.default.initialCode) {
+          setEditorContent(problemModule.default.initialCode);
+        }
+        setIsSlideModal(true);
+        setPageKey(Date.now());
       } catch (err) {
         console.error("Error loading problem:", err);
         setError("その問題IDは存在しません。");
@@ -112,6 +133,7 @@ const Problems: React.FC = () => {
     console.log("異変の発生率:", anomalyRatio);
     if (triggerAnomaly(anomalyRatio)) {
       const selectedAnomalies = getRandomAnomalies(1);
+      setAnomalyPool(selectedAnomalies);
 
       // 選択した異変を実行
       selectedAnomalies.forEach((anomaly) => {
@@ -129,8 +151,11 @@ const Problems: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] overflow-hidden p-0 m-0">
-      {isSlideModal && <Slide key={`slide-${Date.now()}`} id={1} />}
+    <div
+      key={pageKey}
+      className="flex flex-col h-[calc(100vh-120px)] overflow-hidden p-0 m-0"
+    >
+      {isSlideModal && <Slide key={`slide-${pageKey}`} id={nowProblemNumber} />}
       <PanelGroup
         direction="horizontal"
         className="flex-1 w-full overflow-hidden"
@@ -140,17 +165,17 @@ const Problems: React.FC = () => {
         </Panel>
         <PanelResizeHandle />
         <Panel defaultSize={70} minSize={20}>
-          <EditorComponent />
+          <EditorComponent key={`editor-${pageKey}`} />
         </Panel>
         <PanelResizeHandle />
         <Panel defaultSize={40} minSize={30}>
           <PanelGroup direction="vertical">
             <Panel defaultSize={10}>
-              <ConsoleUI mode="console" />
+              <ConsoleUI mode="console" key={`console-${pageKey}`} />
             </Panel>
             <PanelResizeHandle />
             <Panel defaultSize={10}>
-              <ConsoleUI mode="sample" />
+              <ConsoleUI mode="sample" key={`sample-${pageKey}`} />
             </Panel>
           </PanelGroup>
         </Panel>
