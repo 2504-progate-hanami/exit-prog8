@@ -40,7 +40,7 @@ const Problems: React.FC = () => {
         await installProcess.exit;
 
         const catCodeRunnerProcess = await container.spawn("cat", [
-          "features/coderunner/codeRunner.ts",
+          "codeRunner.ts",
         ]);
         catCodeRunnerProcess.output.pipeTo(
           new WritableStream({
@@ -55,8 +55,7 @@ const Problems: React.FC = () => {
           "tsc",
           "--outDir",
           ".",
-          "features/coderunner/codeRunner.ts",
-          "features/checker/check.ts",
+          "codeRunner.ts",
         ]);
 
         const tscExitCode = await tscProcess.exit;
