@@ -1,6 +1,6 @@
 import { WebContainer } from "@webcontainer/api";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router-dom";
 import {
@@ -8,8 +8,10 @@ import {
   problemAtom,
   webContainerAtom,
   isSlideModalAtom,
+  isDebugModeAtom,
 } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
+import { DebugModePopup } from "~/components/DebugModePopup";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
 import { Slide } from "~/components/slide";
@@ -27,6 +29,28 @@ const Problems: React.FC = () => {
   const [problem, setProblem] = useAtom(problemAtom);
   const [isSlideModal] = useAtom(isSlideModalAtom);
   const setAnomalyPool = useSetAtom(anomalyPoolAtom);
+  const [isDebugMode, setIsDebugMode] = useAtom(isDebugModeAtom);
+
+  // キーボードショートカットの処理
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      // Ctrl+Shift+D でデバッグモードのトグル
+      if (event.ctrlKey && event.shiftKey && event.key === "D") {
+        event.preventDefault();
+        setIsDebugMode(!isDebugMode);
+        console.log(`デバッグモード: ${!isDebugMode ? "ON" : "OFF"}`);
+      }
+    },
+    [isDebugMode, setIsDebugMode],
+  );
+
+  // キーボードイベントのリスナー設定
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   useEffect(() => {
     if (!id) return;
@@ -132,6 +156,9 @@ const Problems: React.FC = () => {
           </PanelGroup>
         </Panel>
       </PanelGroup>
+
+      {/* デバッグモードポップアップ */}
+      <DebugModePopup />
     </div>
   );
 };

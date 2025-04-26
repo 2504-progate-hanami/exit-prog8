@@ -22,3 +22,8 @@ export const isDiffModeAtom = atom<boolean>(false);
 export const isSlideModalAtom = atom<boolean>(true);
 export const anomalyPoolAtom = atom<Anomaly[]>(anomalies);
 export const isSubmitPopupOpenAtom = atom<boolean>(false);
+
+// デバッグモード関連のatoms
+export const isDebugModeAtom = atom<boolean>(false);
+export const activeAnomalyAtom = atom<Anomaly | null>(null);
+export const debugAnomaliesAtom = atom<Anomaly[]>([]);
