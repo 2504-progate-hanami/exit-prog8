@@ -1,8 +1,14 @@
 import type { Anomaly } from "~/types/anomaly";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
+import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
+import lightningEffect from "~/resources/anomalies/lightning-effect";
 
 // 異変を作成したら、ここに追加してください
-export const anomalies: Anomaly[] = [rainbowHeader];
+export const anomalies: Anomaly[] = [
+  rainbowHeader,
+  snowstormEffect,
+  lightningEffect,
+];
 
 /**
  * 異変プールから指定された数の異変をランダムに選択する
