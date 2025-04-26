@@ -1,41 +1,81 @@
 import type { Problem } from "~/types/problem";
 
-const procedure = document.createElement("div");
-procedure.innerHTML =
-  "<p>この問題では、<code>console.log</code> を使って 'Hello world' を出力するプログラムを書いてみよう！</p>";
+const procedure3 = document.createElement("div");
+procedure3.innerHTML = `
+  <p>この問題では、JavaScriptの「分割代入」について学びます。</p>
+  <p>分割代入は、配列やオブジェクトから値を取り出して変数に代入する便利な構文です！</p>
+  <p>この問題では、ユーザー情報から必要なデータを分割代入を使って取り出してみましょう！</p>
+`;
 
 export default {
-  name: "Hello World 問題",
+  name: "分割代入を使ってみよう",
   instructions: [
     {
-      title: "console.log とは",
+      title: "分割代入とは？",
       description:
-        "console.log は、JavaScriptでコンソールにメッセージを出力するための関数やね～。デバッグや確認に便利！",
+        "分割代入は配列やオブジェクトから複数の値を一度に取り出して変数に代入できる機能です。コードがシンプルで読みやすくなります。",
     },
     {
-      title: "Hello world を出力しよう",
+      title: "ユーザー情報を取り出そう",
       description:
-        "プログラムの基本中の基本！<code>console.log</code> を使って 'Hello world' を出力してみよう～",
+        "与えられたuserオブジェクトから、name, age, locationの3つの情報を分割代入で取り出し、それぞれを表示してみましょう！",
+    },
+    {
+      title: "ヒント",
+      description:
+        "オブジェクトの分割代入は const { プロパティ名1, プロパティ名2 } = オブジェクト; という形で書きます。取り出した値はconsole.logで出力してみましょう。",
     },
   ],
-  procedure,
-  initialCode: `// ここにコードを書いてね！`,
-  answerCode: `console.log("Hello world");`,
+  procedure: procedure3,
+  initialCode: `// ユーザー情報
+const user = {
+  name: "山田",
+  age: 30,
+  location: "東京",
+  hobby: "プログラミング"
+};
+
+// 分割代入を使って name, age, location を取り出し、
+// それぞれの値をconsole.logで表示してください。
+`,
+  answerCode: `// ユーザー情報
+const user = {
+  name: "山田",
+  age: 30,
+  location: "東京",
+  hobby: "プログラミング"
+};
+
+// 分割代入を使ってプロパティを取り出す
+const { name, age, location } = user;
+
+// 取り出した値を表示
+console.log(name);    // "山田"
+console.log(age);     // 30
+console.log(location); // "東京"`,
   checkers: {
     static: [
       {
-        description: "console.log が使われていることを確認する",
+        description: "分割代入が使われていることを確認する",
+        check: (code: string) =>
+          /const\s*{\s*\w+\s*,\s*\w+\s*,\s*\w+\s*}\s*=\s*user/.test(code),
+        message: "オブジェクトの分割代入を使ってください",
+      },
+      {
+        description: "console.logが使われていることを確認する",
         check: (code: string) => /console\.log\(/.test(code),
-        message: "console.log を使ってください",
+        message: "console.logを使って結果を出力してください",
       },
     ],
     dynamic: [
       {
-        description: "'Hello world' が出力されることを確認する",
-        check: (out: string) => /Hello world/.test(out),
-        message: "'Hello world' を出力してください",
+        description: "正しい値が出力されることを確認する",
+        check: (out: string) =>
+          /山田/.test(out) && /30/.test(out) && /東京/.test(out),
+        message:
+          "name, age, locationの値が正しく出力されているか確認してください",
       },
     ],
   },
-  nextProblemId: "2",
+  nextProblemId: "lesson4",
 } as Problem;
