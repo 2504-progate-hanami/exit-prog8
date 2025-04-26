@@ -1,8 +1,52 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
 import type { ProblemInstruction } from "../types/problem";
-import type { CSSProperties } from "react";
+import type { CSSProperties, JSX } from "react";
 
-export function Slide({
+export function Slide({ id }: { id: number }): JSX.Element {
+  const [lesson, setLesson] = useState<ProblemInstruction | null>(null);
+
+  useLayoutEffect(() => {
+    const loadLesson = async () => {
+      try {
+        const lessonModule = await import(`../resources/problems/lesson${id}`);
+        const lessonData = lessonModule.default;
+        if (
+          lessonData &&
+          lessonData.instructions &&
+          lessonData.instructions[0]
+        ) {
+          setLesson({
+            title: lessonData.instructions[0].title,
+            description: lessonData.instructions[0].description,
+            imgSrc: lessonData.instructions[0].imgSrc,
+          });
+        } else {
+          console.error(`Lesson ${id} is missing required data.`);
+          setLesson(null);
+        }
+      } catch (error) {
+        console.error(`Failed to load lesson ${id}:`, error);
+        setLesson(null);
+      }
+    };
+    loadLesson();
+  }, [id]);
+
+  if (!lesson) {
+    return <div>Loading lesson...</div>;
+  }
+
+  return (
+    <CreateSlide
+      imgSrc={lesson.imgSrc}
+      title={lesson.title}
+      description={lesson.description}
+      name={`Lesson ${id}`}
+    />
+  );
+}
+
+function CreateSlide({
   imgSrc,
   title,
   description,
