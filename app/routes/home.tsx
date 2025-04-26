@@ -19,7 +19,7 @@ export default function Home() {
         <div className="flex justify-center">
           <HomeButton
             detail={"始める"}
-            onC={() => navigate("/explain")}
+            onC={() => navigate("/problems/sample")}
             className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline uppercase tracking-wider"
           />
         </div>

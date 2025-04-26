@@ -205,8 +205,8 @@ function CreateSlide({
       paddingLeft: "10px",
       marginTop: "5px",
     },
+    // descriptionContainerのposition:absoluteを削除することによってデザインずれを防ぐ
     descriptionContainer: {
-      position: "absolute",
       top: "30px",
       right: "10px",
       zIndex: 3,
