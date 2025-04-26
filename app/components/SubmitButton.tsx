@@ -1,22 +1,24 @@
 import { useAtom } from "jotai"; // jotaiのuseAtomを追加
 import type { JSX } from "react";
 import { useEffect, useState } from "react"; // useEffectを追加
-import { checkStateAtom } from "~/atoms"; // checkStateAtomをインポート
+import { checkStateAtom, isSubmitPopupOpenAtom } from "~/atoms"; // checkStateAtomをインポート
 
 export function SubmitButton({
   onClick,
 }: {
   onClick: () => void;
 }): JSX.Element {
-  const [showPopup, setShowPopup] = useState(false);
-  const [checkState] = useAtom(checkStateAtom); // チェック状態を取得
+  const [isSubmitPopupOpen, setIsSubtmitPopupOpen] = useAtom(
+    isSubmitPopupOpenAtom,
+  );
+  const [checkState] = useAtom(checkStateAtom);
   const [popupMessage, setPopupMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
   // チェック状態が変わったときにポップアップを表示する
   useEffect(() => {
     if (checkState.status === "success" || checkState.status === "error") {
-      setShowPopup(true);
+      setIsSubtmitPopupOpen(true);
       setPopupMessage(checkState.message);
       setIsSuccess(checkState.status === "success");
     }
@@ -27,7 +29,7 @@ export function SubmitButton({
   };
 
   const closePopup = () => {
-    setShowPopup(false);
+    setIsSubtmitPopupOpen(false);
   };
 
   return (
@@ -61,9 +63,9 @@ export function SubmitButton({
         ></div>
       </div>
 
-      {showPopup && (
+      {isSubmitPopupOpen && (
         <div
-          className={`fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 ${isSuccess ? "border-green-500" : "border-red-500"} text-black px-4 py-10 rounded shadow-lg z-50 max-w-md`}
+          className={`fixed bottom-30 left-47/100 transform -translate-x-1/2 bg-white border-l-4 ${isSuccess ? "border-green-500" : "border-red-500"} text-black px-15 py-7 rounded shadow-lg z-50 max-w-md`}
         >
           <button
             onClick={closePopup}
