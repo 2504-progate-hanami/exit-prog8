@@ -13,6 +13,7 @@ export default [
 
   route("problems/:id", "routes/problems.tsx"),
   route("problems/:id/intro/:index", "routes/problemIntro.tsx"),
+  route("explain", "routes/detailGame.tsx"),
 
   route("congrats", "routes/congrats.tsx"),
 
