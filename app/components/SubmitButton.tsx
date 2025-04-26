@@ -1,7 +1,13 @@
 import { useAtom } from "jotai"; // jotaiのuseAtomを追加
 import type { JSX } from "react";
 import { useEffect, useState } from "react"; // useEffectを追加
-import { checkStateAtom, isSubmitPopupOpenAtom } from "~/atoms"; // checkStateAtomをインポート
+import {
+  checkStateAtom,
+  problemAtom,
+  isSubmitPopupOpenAtom,
+  activeAnomalyAtom,
+} from "~/atoms"; // checkStateAtomをインポート
+import { Link } from "react-router-dom";
 
 export function SubmitButton({
   onClick,
@@ -12,8 +18,10 @@ export function SubmitButton({
     isSubmitPopupOpenAtom,
   );
   const [checkState] = useAtom(checkStateAtom);
+  const [activeAnomaly] = useAtom(activeAnomalyAtom);
   const [popupMessage, setPopupMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [problem] = useAtom(problemAtom);
 
   // チェック状態が変わったときにポップアップを表示する
   useEffect(() => {
@@ -86,11 +94,32 @@ export function SubmitButton({
           </div>
           <span className="block sm:inline">{popupMessage}</span>
 
-          {!isSuccess && (
+          {!isSuccess ? (
             <div className="mt-4 pt-2 border-t border-gray-200">
               <p className="text-sm text-gray-600">
                 ヒント: つまったときはスライドやヒントも確認してみよう🦈
               </p>
+            </div>
+          ) : (
+            <div className="mt-4 pt-2 border-t border-gray-200 flex justify-between">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+                onClick={() => {
+                  console.log(activeAnomaly);
+                }}
+              >
+                ← 引き返す
+              </button>
+              <Link
+                to={`/problems/${problem?.nextProblemId}`}
+                className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-r flex items-center justify-center"
+                onClick={() => {
+                  // ポップアップを閉じる
+                  closePopup();
+                }}
+              >
+                次の問題へ →
+              </Link>
             </div>
           )}
         </div>
