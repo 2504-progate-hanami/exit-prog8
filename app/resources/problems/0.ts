@@ -11,6 +11,7 @@ export default {
       title: "console.log とは",
       description:
         "console.log は、JavaScriptでコンソールにメッセージを出力するための関数やね～。デバッグや確認に便利！",
+      imgSrc: "/ninja-1.png",
     },
     {
       title: "Hello world を出力しよう",
