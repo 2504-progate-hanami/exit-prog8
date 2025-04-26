@@ -18,3 +18,4 @@ export const checkStateAtom = atom<CheckState>({ status: "idle" });
 export const isDiffModeAtom = atom<boolean>(false);
 
 export const isSlideModalAtom = atom<boolean>(true);
+export const isSubmitPopupOpenAtom = atom<boolean>(false);
