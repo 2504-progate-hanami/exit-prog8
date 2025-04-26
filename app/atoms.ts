@@ -13,3 +13,5 @@ export const editorContentAtom = atom<string>(
 export const webContainerAtom = atom<WebContainer | null>(null);
 
 export const problemAtom = atom<Problem | null>(null);
+
+export const isDiffModeAtom = atom<boolean>(false);
