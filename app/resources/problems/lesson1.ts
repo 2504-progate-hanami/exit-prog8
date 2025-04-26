@@ -2,85 +2,75 @@ import type { Problem } from "~/types/problem";
 
 const procedure1 = document.createElement("div");
 procedure1.innerHTML = `
-  <p>この問題では、ユーザーの年齢に応じて異なるメッセージをコンソールに出力するプログラムを作成します。</p>
-  <p>JavaScript の三項演算子を使って、条件分岐をより簡潔に記述する方法を学びましょう！</p>
+  <p>この問題では、JavaScript の三項演算子（条件演算子）について学びます。</p>
+  <p>三項演算子は <code>条件式 ? 真の場合の値 : 偽の場合の値</code> という構文で、if-else文を短く書くことができる便利な機能だよ～</p>
+  <p>例えば次のコードは：</p>
+  <pre>
+  let message;
+  if (age >= 20) {
+    message = "成人です";
+  } else {
+    message = "未成年です";
+  }
+  </pre>
+  <p>三項演算子を使うとこんな感じにシンプルに書けるよ：</p>
+  <pre>
+  let message = age >= 20 ? "成人です" : "未成年です";
+  </pre>
+  <p>この問題では、与えられた年齢(age)に応じてメッセージを出力するプログラムを三項演算子を使って書いてみよう！</p>
 `;
 
 export default {
-  name: "年齢に応じたメッセージ表示",
+  name: "三項演算子マスター",
   instructions: [
     {
-      title: "1. 変数の準備",
-      description: `
-        まず、ユーザーの年齢を保存するための変数 <code>userAge</code> を宣言し、あなたの好きな年齢（例：<code>20</code>）を代入してください。
-        <pre><code>let userAge = 20;</code></pre>
-        後でこの値を変更して、プログラムの動作を確認してみましょう。
-      `,
+      title: "三項演算子とは？",
+      description:
+        "三項演算子は条件式 ? 真の場合の値 : 偽の場合の値 という形で書きます。if-elseより短く書けるため便利です。",
     },
     {
-      title: "2. 三項演算子の導入",
-      description: `
-        次に、条件に応じて異なる値を返すことができる便利な演算子、**三項演算子** を使います。
-        基本的な構文は以下の通りです。
-        <pre><code>条件 ? 真の場合の値 : 偽の場合の値</code></pre>
-        この問題では、<code>userAge</code> が 18 歳以上かどうかを条件とし、真（18歳以上）の場合は <code>'成人です'</code>、偽（18歳未満）の場合は <code>'未成年です'</code> という文字列を変数 <code>message</code> に代入します。
-        以下のコードを <code>// ここにコードを書いてね！</code> の下に記述してみてください。
-        <pre><code>let message = userAge >= 18 ? '成人です' : '未成年です';</code></pre>
-      `,
+      title: "年齢チェッカーを作ろう",
+      description:
+        "age変数の値が20以上なら「成人です」、そうでなければ「未成年です」と出力するプログラムを三項演算子を使って書いてみましょう！",
     },
     {
-      title: "3. 結果の出力",
-      description: `
-        最後に、作成したメッセージをコンソールに出力して結果を確認しましょう。
-        JavaScript でコンソールにメッセージを表示するには、<code>console.log()</code> 関数を使います。
-        以下のコードを先ほどのコードの下に記述してください。
-        <pre><code>console.log(message);</code></pre>
-        これでプログラムは完成です！<code>userAge</code> の値を色々変えて、出力されるメッセージが変わることを確認してみてください。
-      `,
+      title: "ヒント",
+      description:
+        "まず条件（age >= 20）を書いて、?の後に条件が真の時の値、:の後に偽の時の値を書きます。それをconsole.logで出力しましょう。",
     },
   ],
   procedure: procedure1,
-  initialCode: `let userAge = 20; // 年齢を自由に設定してください
-let message;
+  initialCode: `// 年齢の値
+const age = 18;
 
-// ここにコードを書いてね！`,
-  answerCode: `let userAge = 20;
-let message = userAge >= 18 ? '成人です' : '未成年です';
-console.log(message);`,
+// 三項演算子を使って、ageが20以上なら「成人です」、
+// そうでなければ「未成年です」と出力しよう！
+`,
+  answerCode: `// 年齢の値
+const age = 18;
+
+// 三項演算子を使って条件分岐
+console.log(age >= 20 ? "成人です" : "未成年です");`,
   checkers: {
     static: [
       {
-        description: "三項演算子がコードに含まれていることを確認します",
-        check: (code: string) => code.includes("?") && code.includes(":"),
-        message: "三項演算子を使って条件分岐を記述してください。",
+        description: "三項演算子が使われていることを確認する",
+        check: (code: string) => /\?.*:/.test(code),
+        message: "三項演算子（条件 ? 値1 : 値2）を使ってください",
       },
       {
-        description: "console.log 関数が使われていることを確認します",
+        description: "console.logが使われていることを確認する",
         check: (code: string) => /console\.log\(/.test(code),
-        message: "結果をコンソールに出力してください。",
+        message: "console.logを使って結果を出力してください",
       },
     ],
     dynamic: [
       {
-        description:
-          "'成人です' または '未成年です' のいずれかが出力されることを確認します",
-        check: (out: string) => /成人です|未成年です/.test(out),
-        message:
-          "'成人です' または '未成年です' のいずれかを出力してください。",
-      },
-      {
-        description: "'成人です' が出力されることを確認します",
-        check: (out: string) => /成人です/.test(out),
-        message:
-          "18歳以上の年齢を設定した場合、'成人です' と出力されるはずです。",
-      },
-      {
-        description: "'未成年です' が出力されることを確認します",
+        description: "年齢に応じた正しいメッセージが出力されることを確認する",
         check: (out: string) => /未成年です/.test(out),
-        message:
-          "18歳未満の年齢を設定した場合、'未成年です' と出力されるはずです。",
+        message: "ageが18の時は「未成年です」と出力されるはずです",
       },
     ],
   },
-  nextProblemId: "lesson2",
+  nextProblemId: "2",
 } as Problem;
