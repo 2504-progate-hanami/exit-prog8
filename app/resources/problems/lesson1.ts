@@ -6,7 +6,7 @@ procedure1.innerHTML = `
   <p>JavaScript の三項演算子を使って、条件分岐をより簡潔に記述する方法を学びましょう！</p>
 `;
 
-export const problem1 = {
+export default {
   name: "年齢に応じたメッセージ表示",
   instructions: [
     {
@@ -82,5 +82,5 @@ console.log(message);`,
       },
     ],
   },
-  nextProblemId: "problem2",
+  nextProblemId: "lesson2",
 } as Problem;
