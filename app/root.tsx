@@ -40,7 +40,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header />
         <QueryClientProvider client={queryClient}>
-          {children}
+          <main
+            style={{
+              flex: "0 1 auto",
+              maxHeight: "calc(100vh - 120px)",
+              overflowY: "auto",
+            }}
+          >
+            {children}
+          </main>
         </QueryClientProvider>
         <Footer />
         <ScrollRestoration />
