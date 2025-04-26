@@ -4,6 +4,7 @@ import type * as monaco from "monaco-editor";
 import type { Checker } from "./types/checker";
 import type { Problem } from "./types/problem";
 import type { Anomaly } from "./types/anomaly";
+import { anomalies } from "./features/anomalypooler/anomalyPooler";
 
 export const editorInstanceAtom =
   atom<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -19,5 +20,5 @@ export const checkStateAtom = atom<CheckState>({ status: "idle" });
 export const isDiffModeAtom = atom<boolean>(false);
 
 export const isSlideModalAtom = atom<boolean>(true);
-export const anomalyPoolAtom = atom<Anomaly[]>([]);
+export const anomalyPoolAtom = atom<Anomaly[]>(anomalies);
 export const isSubmitPopupOpenAtom = atom<boolean>(false);

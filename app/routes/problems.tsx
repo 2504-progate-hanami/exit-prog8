@@ -92,7 +92,6 @@ const Problems: React.FC = () => {
 
       // 選択した異変を実行
       selectedAnomalies.forEach((anomaly) => {
-        console.log(`異変を発動: ${anomaly.name}`);
         anomaly.execute();
       });
     }
