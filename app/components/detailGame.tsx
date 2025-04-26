@@ -23,7 +23,7 @@ export function DetailGame() {
           何もなければ、自信を持って次のレッスンへ進みましょう。
         </p>
 
-        <h2 className="text-xl text-gray-800 mt-8 mb-4">異変のDetail</h2>
+        <h2 className="text-xl text-gray-800 mt-8 mb-4">異変</h2>
         <ul className="list-disc list-inside text-gray-700 leading-relaxed mb-8">
           <li>
             <span className="font-bold text-blue-500">コードの着色</span>
