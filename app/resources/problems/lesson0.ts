@@ -38,5 +38,5 @@ export default {
       },
     ],
   },
-  nextProblemId: "2",
+  nextProblemId: "lesson1",
 } as Problem;

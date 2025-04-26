@@ -1,14 +1,15 @@
 import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import type { ProblemInstruction } from "../types/problem";
 import type { CSSProperties, JSX } from "react";
-import { useAtom } from "jotai";
-import { isSlideModalAtom } from "~/atoms";
+import { useAtom, useAtomValue } from "jotai";
+import { isSlideModalAtom, problemAtom } from "~/atoms";
 
 export function Slide({ id }: { id: number }): JSX.Element {
   const [lesson, setLesson] = useState<ProblemInstruction | null>(null);
   const [, setIsModalOpen] = useAtom(isSlideModalAtom);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const modalRef = useRef<HTMLDivElement>(null);
+  const problem = useAtomValue(problemAtom);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,17 +42,11 @@ export function Slide({ id }: { id: number }): JSX.Element {
   useLayoutEffect(() => {
     const loadLesson = async () => {
       try {
-        const lessonModule = await import(`../resources/problems/lesson${id}`);
-        const lessonData = lessonModule.default;
-        if (
-          lessonData &&
-          lessonData.instructions &&
-          lessonData.instructions[0]
-        ) {
+        if (problem && problem.instructions && problem.instructions[0]) {
           setLesson({
-            title: lessonData.instructions[0].title,
-            description: lessonData.instructions[0].description,
-            imgSrc: lessonData.instructions[0].imgSrc,
+            title: problem.instructions[0].title,
+            description: problem.instructions[0].description,
+            imgSrc: problem.instructions[0].imgSrc,
           });
         } else {
           console.error(`Lesson ${id} is missing required data.`);
@@ -212,21 +207,24 @@ function CreateSlide({
     },
     descriptionContainer: {
       position: "absolute",
-      top: "10px",
+      top: "30px",
       right: "10px",
       zIndex: 3,
       padding: "10px",
       width: "auto",
-      maxWidth: "300px",
       overflowY: "auto",
       textAlign: "right",
     },
     description: {
       color: "#666",
       fontSize: "0.95em",
-      lineHeight: "1.3",
+      lineHeight: "1.5",
       wordBreak: "break-word",
       whiteSpace: "pre-wrap",
+      textAlign: "left",
+      padding: "10px",
+      maxHeight: "250px",
+      overflowY: "auto",
     },
     imageContainer: {
       zIndex: 1,

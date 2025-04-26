@@ -4,7 +4,7 @@ import { isSlideModalAtom } from "~/atoms";
 type card = {
   where: string;
   problemProps: string;
-  problem: string;
+  problem: HTMLElement;
 };
 
 export function Card({ where, problemProps, problem }: card) {
@@ -32,7 +32,10 @@ export function Card({ where, problemProps, problem }: card) {
         <span className="ml-2 text-gray-700 text-sm">{problemProps}</span>
       </div>
       <div className="flex items-center mb-4">
-        <span className="ml-2 text-gray-700 text-sm">{problem}</span>
+        <span
+          className="ml-2 text-gray-700 text-sm"
+          dangerouslySetInnerHTML={{ __html: problem.innerHTML }}
+        ></span>
       </div>
 
       <button

@@ -7,11 +7,7 @@ export function ProcedureComponent() {
   if (!problem) return <div>問題が見つかりません</div>;
   return (
     <div className="flex flex-col space-y-4 p-4 bg-gray-100 h-full">
-      <Card
-        where={problem.name}
-        problemProps=""
-        problem={problem.instructions[0]?.description || ""}
-      />
+      <Card where={problem.name} problemProps="" problem={problem.procedure} />
     </div>
   );
 }
