@@ -1,4 +1,4 @@
-import { useState } from "react"; // useStateをインポート
+import { useState } from "react";
 import type { JSX } from "react";
 
 export function SubmitButton({
@@ -6,15 +6,15 @@ export function SubmitButton({
 }: {
   onClick: () => void;
 }): JSX.Element {
-  const [showPopup, setShowPopup] = useState(false); // ポップアップの表示状態を管理
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleClick = () => {
-    setShowPopup(true); // ポップアップを表示
+    setShowPopup(true);
     onClick();
   };
 
   const closePopup = () => {
-    setShowPopup(false); // ポップアップを閉じる
+    setShowPopup(false);
   };
 
   return (
@@ -43,7 +43,6 @@ export function SubmitButton({
         ></div>
       </div>
 
-      {/* ポップアップ */}
       {showPopup && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-white border-l-4 border-red-500 text-black px-4 py-10 rounded shadow-lg">
           <button
