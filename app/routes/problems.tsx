@@ -3,12 +3,21 @@ import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router-dom";
-import { problemAtom, webContainerAtom, isSlideModalAtom } from "~/atoms";
+import {
+  anomalyPoolAtom,
+  problemAtom,
+  webContainerAtom,
+  isSlideModalAtom,
+} from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
 import { Slide } from "~/components/slide";
 import { files } from "~/files";
+import {
+  getRandomAnomalies,
+  shouldTriggerAnomaly,
+} from "~/features/anomalypooler/anomalyPooler";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +26,7 @@ const Problems: React.FC = () => {
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
   const [isSlideModal] = useAtom(isSlideModalAtom);
+  const setAnomalyPool = useSetAtom(anomalyPoolAtom);
 
   useEffect(() => {
     if (!id) return;
@@ -75,12 +85,16 @@ const Problems: React.FC = () => {
       }
     })();
 
-    // 異変の抽選処理
-    if (Math.random() < 0.6) {
-      (async () => {
-        const anomaly = await import("../resources/anomalies/rainbow-header");
-        anomaly.default.execute();
-      })();
+    // 異変の抽選と設定処理
+    if (shouldTriggerAnomaly()) {
+      const selectedAnomalies = getRandomAnomalies(1);
+      setAnomalyPool(selectedAnomalies);
+
+      // 選択した異変を実行
+      selectedAnomalies.forEach((anomaly) => {
+        console.log(`異変を発動: ${anomaly.name}`);
+        anomaly.execute();
+      });
     }
   }, []);
 
