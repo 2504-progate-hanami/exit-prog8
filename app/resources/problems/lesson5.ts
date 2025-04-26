@@ -84,5 +84,5 @@ console.log(displayName2); // "田中"`,
       },
     ],
   },
-  nextProblemId: "6",
+  nextProblemId: "lesson6",
 } as Problem;
