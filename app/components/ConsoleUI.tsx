@@ -29,11 +29,8 @@ export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
         mode === "console" ? content : problem?.answerCode || "";
 
       const nodeProcess = await webContainer.spawn("node", [
-        "-e",
-        `
-        const { runCode } = require('./codeRunner.js');
-        process.stdout.write(runCode(\`${codeToRun}\`));
-      `,
+        "codeRunner.js",
+        codeToRun,
       ]);
 
       let output = "";

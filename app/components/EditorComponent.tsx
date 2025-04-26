@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import type * as monaco from "monaco-editor";
-import { useAtom } from "jotai";
-import { SubmitButton } from "./SubmitButton";
-import { EditorHoverButton } from "./EditorHoverButton";
-import { editorInstanceAtom, editorContentAtom } from "../atoms";
 import Editor from "@monaco-editor/react";
-import { webContainerAtom, problemAtom } from "~/atoms";
+import { useAtom } from "jotai";
+import type * as monaco from "monaco-editor";
+import { useEffect, useState } from "react";
+import { problemAtom, webContainerAtom } from "~/atoms";
+import { editorContentAtom, editorInstanceAtom } from "../atoms";
+import { EditorHoverButton } from "./EditorHoverButton";
+import { SubmitButton } from "./SubmitButton";
 
 export function EditorComponent() {
   const [editorInstance, setEditorInstance] = useAtom(editorInstanceAtom);
