@@ -35,21 +35,13 @@ export function EditorComponent() {
       return;
     }
 
-    // 静的チェッカーと動的チェッカーをJSON文字列化
-    const staticCheckersJSON = JSON.stringify(problem.checkers.static);
-    const dynamicCheckersJSON = JSON.stringify(problem.checkers.dynamic);
+    // 静的チェックを実行する
 
-    // TypeScriptファイルを実行するために、まずコンパイルする
+    // コードを実行し、出力を受け取る
     webContainer
       .spawn("npx", ["tsc", "--outDir", "dist"])
       .then(() => {
-        // コンパイル成功後、コンパイルされたJSファイルを実行
-        return webContainer.spawn("node", [
-          "dist/runChecker.js",
-          content,
-          staticCheckersJSON,
-          dynamicCheckersJSON,
-        ]);
+        return webContainer.spawn("node", ["dist/codeRunner.js", content]);
       })
       .then((process: { output: ReadableStream }) => {
         process.output.pipeTo(
@@ -63,6 +55,8 @@ export function EditorComponent() {
       .catch((error: Error) => {
         console.error("チェック実行中にエラーが発生:", error);
       });
+
+    // 出力に対し、動的チェックを実行する
   }
 
   function handleEditorDidMount(
@@ -123,7 +117,11 @@ export function EditorComponent() {
       </div>
 
       <div className="flex justify-between items-center px-4 py-2 bg-[#333] text-white">
-        <EditorHoverButton mode="reset" editorInstance={editorInstance} />
+        <EditorHoverButton
+          onClick={() => {}}
+          mode="reset"
+          editorInstance={editorInstance}
+        />
         <EditorHoverButton onClick={() => checkHandle()} mode="answer" />
         <SubmitButton onClick={() => checkHandle()} />
       </div>

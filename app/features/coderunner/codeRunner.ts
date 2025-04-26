@@ -33,6 +33,7 @@ export const runCode = (code: string): string => {
   return logOutput + evalOut;
 };
 
+// ---------------------------------------------------
 // 引数の受け取り
 const args = process.argv.slice(2);
 if (args.length < 1) {
