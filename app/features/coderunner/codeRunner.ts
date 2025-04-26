@@ -22,7 +22,7 @@ export const runCode = (code: string): string => {
 
   let evalOut = "";
   try {
-    evalOut = eval(code);
+    evalOut = eval(code) ?? "";
   } catch (e) {
     evalOut = `Error: ${e}`;
   }
