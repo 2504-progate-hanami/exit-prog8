@@ -1,6 +1,3 @@
-import { Console } from "console";
-import { Writable } from "stream";
-
 /**
  * コードを実行して出力を取得する関数。
  * @param code 実行するコード
@@ -8,24 +5,22 @@ import { Writable } from "stream";
  */
 export const runCode = (code: string): string => {
   let logOutput = "";
-  const logStream = new Writable({
-    write(chunk, encoding, callback) {
-      logOutput += chunk.toString();
-      callback();
-    },
-  });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const customConsole = new Console({ stdout: logStream, stderr: logStream });
+  // console.log を一時的にオーバーライド
+  const originalConsoleLog = console.log;
+  console.log = (...args: unknown[]) => {
+    logOutput += args.map((arg) => String(arg)).join(" ") + "\n";
+  };
 
-  let evalResult: unknown;
+  let evalOut = "";
   try {
-    evalResult = eval(`(function(console){${code}})(customConsole)`);
+    evalOut = eval(code);
   } catch (e) {
-    evalResult = `Error: ${e}`;
+    evalOut = `Error: ${e}`;
   }
 
-  return (
-    logOutput + (typeof evalResult !== "undefined" ? String(evalResult) : "")
-  );
+  // console.log を元に戻す
+  console.log = originalConsoleLog;
+
+  return logOutput + evalOut;
 };
