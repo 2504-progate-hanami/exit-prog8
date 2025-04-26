@@ -59,8 +59,7 @@ console.log(location); // "東京"`,
         description: "分割代入が使われていることを確認する",
         check: (code: string) =>
           /const\s*{\s*\w+\s*,\s*\w+\s*,\s*\w+\s*}\s*=\s*user/.test(code),
-        message:
-          "オブジェクトの分割代入（const { name, age, location } = user）を使ってください",
+        message: "オブジェクトの分割代入を使ってください",
       },
       {
         description: "console.logが使われていることを確認する",
