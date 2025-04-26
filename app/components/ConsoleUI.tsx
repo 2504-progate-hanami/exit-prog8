@@ -34,14 +34,25 @@ export function ConsoleUI({ mode }: ConsoleUIProps): JSX.Element {
       ]);
 
       let output = "";
-      nodeProcess.output.pipeTo(
-        new WritableStream({
-          write(data) {
-            output += data;
-            setConsoleOutput(output);
-          },
-        }),
-      );
+      const endMarker = "__EOF__";
+      const reader = nodeProcess.output.getReader();
+
+      // チャンク単位で読み込む
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        output += value;
+        setConsoleOutput(output);
+
+        // 終端マーカーが見つかったら処理終了
+        if (output.includes(endMarker)) {
+          // 終端マーカーを取り除いて表示
+          const cleanOutput = output.replace(endMarker, "").trim();
+          setConsoleOutput(cleanOutput);
+          break;
+        }
+      }
 
       await nodeProcess.exit;
     } catch (error) {

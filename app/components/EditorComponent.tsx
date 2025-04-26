@@ -47,32 +47,60 @@ export function EditorComponent() {
 
     // コードを実行し、出力を受け取る
     let output = "";
+    const endMarker = "__EOF__";
+
     webContainer
       .spawn("npx", ["tsc", "--outDir", "dist"])
       .then(() => {
         return webContainer.spawn("node", ["codeRunner.js", content]);
       })
       .then((process: { output: ReadableStream }) => {
-        process.output.pipeTo(
-          new WritableStream({
-            write(data) {
-              output += data;
-            },
-          }),
-        );
+        const reader = process.output.getReader();
+
+        // 再帰的にstreamを読み込む
+        return new Promise((resolve) => {
+          function readChunk() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("読み込み完了:", output);
+                resolve(output);
+                return;
+              }
+
+              const chunk = value || "";
+              output += chunk;
+
+              // 終端マーカーが見つかったらストリームを閉じる
+              if (output.includes(endMarker)) {
+                // 終端マーカーを削除
+                output = output.replace(endMarker, "").trim();
+                console.log("終端マーカーを検出、読み込み完了:", output);
+                resolve(output);
+                return;
+              }
+
+              readChunk();
+            });
+          }
+
+          readChunk();
+        });
+      })
+      .then((finalOutput) => {
+        // finalOutputを使って動的チェックを実行
+        const dynamicCheckers = problem.checkers.dynamic;
+        for (const checker of dynamicCheckers) {
+          if (!checker.check(finalOutput as string)) {
+            console.error("動的チェックに失敗:", checker.message);
+            return;
+          }
+        }
+
+        console.log("全チェック通過！おめでとう！");
       })
       .catch((error: Error) => {
         console.error("チェック実行中にエラーが発生:", error);
       });
-
-    // 出力に対し、動的チェックを実行する
-    const dynamicCheckers = problem.checkers.dynamic;
-    for (const checker of dynamicCheckers) {
-      if (!checker.check(output)) {
-        console.error("動的チェックに失敗:", checker.message);
-        return;
-      }
-    }
   }
 
   function handleEditorDidMount(

@@ -30,7 +30,7 @@ export const runCode = (code: string): string => {
   // console.log を元に戻す
   console.log = originalConsoleLog;
 
-  return logOutput + evalOut;
+  return logOutput + evalOut + "\n__EOF__";
 };
 
 // ---------------------------------------------------
