@@ -3,10 +3,11 @@ import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useParams } from "react-router-dom";
-import { problemAtom, webContainerAtom } from "~/atoms";
+import { problemAtom, webContainerAtom, isSlideModalAtom } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
+import { Slide } from "~/components/slide";
 import { files } from "~/files";
 
 const Problems: React.FC = () => {
@@ -15,6 +16,7 @@ const Problems: React.FC = () => {
 
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
+  const [isSlideModal] = useAtom(isSlideModalAtom);
 
   useEffect(() => {
     if (!id) return;
@@ -84,6 +86,7 @@ const Problems: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-120px)] overflow-hidden p-0 m-0">
+      {isSlideModal && <Slide key={`slide-${Date.now()}`} id={1} />}
       <PanelGroup
         direction="horizontal"
         className="flex-1 w-full overflow-hidden"
