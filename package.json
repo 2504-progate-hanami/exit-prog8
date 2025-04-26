@@ -24,6 +24,7 @@
 		"@supabase/supabase-js": "^2.49.4",
 		"@tanstack/react-query": "^5.74.4",
 		"@types/react-router": "^5.1.20",
+		"@vercel/react-router": "^1.1.0",
 		"@webcontainer/api": "^1.6.1",
 		"axios": "^1.8.4",
 		"isbot": "^5.1.17",
