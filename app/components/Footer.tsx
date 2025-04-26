@@ -19,6 +19,33 @@ export function Footer() {
     >
       {/* 左側にボタンを配置 */}
       <SlideCheckButton />
+      {/* 真ん中にプログレスバーを配置 */}
+      <div
+        style={{
+          flexGrow: 1,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "200px", // 横幅の20%
+            height: "20px", // 高さを太く調整
+            backgroundColor: "#ddd", // 背景色
+            borderRadius: "10px", // 丸みを調整
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              width: "20%", // プログレスの進捗（仮に50%）
+              height: "100%",
+              backgroundColor: "#8AC75A", // プログレスバーの色
+            }}
+          ></div>
+        </div>
+      </div>
       <p>&copy; Prog-8番出口. All rights reserved.</p>
     </footer>
   );
