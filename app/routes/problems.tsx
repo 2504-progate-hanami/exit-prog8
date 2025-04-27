@@ -12,6 +12,7 @@ import {
   editorContentAtom,
   checkStateAtom,
   nowProblemNumberAtom,
+  nowAnomalyAtom,
 } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { DebugModePopup } from "~/components/DebugModePopup";
@@ -23,6 +24,10 @@ import {
   getRandomAnomalies,
   triggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
+import {
+  getNowProblemNumber,
+  setNowProblemNumber as setSessionProblemNumber,
+} from "~/utils/sessionStorage";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,12 +35,13 @@ const Problems: React.FC = () => {
 
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
+  const [, setNowAnomaly] = useAtom(nowAnomalyAtom);
 
   const setAnomalyPool = useSetAtom(anomalyPoolAtom);
   const [isDebugMode, setIsDebugMode] = useAtom(isDebugModeAtom);
 
   const [isSlideModal, setIsSlideModal] = useAtom(isSlideModalAtom);
-  const [pageKey, setPageKey] = useState<number>(Date.now());
+  const [pageKey] = useState<number>(Date.now());
   const [, setEditorContent] = useAtom(editorContentAtom);
   const [checkState, setCheckState] = useAtom(checkStateAtom);
   const [nowProblemNumber, setNowProblemNumber] = useAtom(nowProblemNumberAtom);
@@ -61,6 +67,17 @@ const Problems: React.FC = () => {
     };
   }, [handleKeyDown]);
 
+  // 問題番号を更新する関数
+  const updateProblemNumber = useCallback(
+    (newValue: number) => {
+      // atomを更新
+      setNowProblemNumber(newValue);
+      // セッションストレージも更新
+      setSessionProblemNumber(newValue);
+    },
+    [setNowProblemNumber],
+  );
+
   useEffect(() => {
     if (!id) return;
 
@@ -69,7 +86,6 @@ const Problems: React.FC = () => {
         const problemModule = await import(`../resources/problems/${id}.ts`);
         setProblem(problemModule.default);
         if (checkState.status === "success") {
-          setNowProblemNumber(nowProblemNumber + 1);
           setCheckState({ status: "idle" });
         }
 
@@ -77,13 +93,20 @@ const Problems: React.FC = () => {
           setEditorContent(problemModule.default.initialCode);
         }
         setIsSlideModal(true);
-        setPageKey(Date.now());
       } catch (err) {
         console.error("Error loading problem:", err);
         setError("その問題IDは存在しません。");
       }
     })();
-  }, [id]);
+  }, [id, updateProblemNumber]);
+
+  // コンポーネントマウント時にセッションストレージから問題番号を同期
+  useEffect(() => {
+    const sessionNumber = getNowProblemNumber();
+    if (sessionNumber !== nowProblemNumber) {
+      setNowProblemNumber(sessionNumber);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -130,9 +153,12 @@ const Problems: React.FC = () => {
 
     // 異変の抽選と設定処理
     const anomalyRatio = parseFloat(import.meta.env.VITE_ANOMALY_RATIO) ?? 0.6;
+    const number = getNowProblemNumber();
     console.log("異変の発生率:", anomalyRatio);
-    if (triggerAnomaly(anomalyRatio)) {
+    if (triggerAnomaly(anomalyRatio) && number != 0) {
       const selectedAnomalies = getRandomAnomalies(1);
+      setNowAnomaly(selectedAnomalies[0]);
+
       setAnomalyPool(selectedAnomalies);
 
       // 選択した異変を実行
