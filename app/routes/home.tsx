@@ -20,7 +20,7 @@ export default function Home() {
           <HomeButton
             detail={"始める"}
             onC={() => navigate("/explain")}
-            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline uppercase tracking-wider"
+            className="bg-[#47ecd5] hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline uppercase tracking-wider"
           />
         </div>
       </div>

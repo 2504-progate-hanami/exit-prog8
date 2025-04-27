@@ -213,7 +213,10 @@ export function EditorComponent() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#1e1e1e]">
+    <div
+      className="flex flex-col h-full bg-[#1e1e1e]"
+      style={{ width: "70%", margin: "0 auto", maxWidth: "1200px" }}
+    >
       <div className="flex justify-between items-center px-4 py-2 bg-gray-700 text-white shadow-md">
         <span>script.js</span>
         <button className="text-white"></button>
