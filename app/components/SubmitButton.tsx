@@ -7,6 +7,7 @@ import {
   isSubmitPopupOpenAtom,
   nowProblemNumberAtom,
   nowAnomalyAtom,
+  handleRunAtom,
 } from "~/atoms";
 import { useNavigate } from "react-router-dom";
 import {
@@ -133,6 +134,14 @@ export function SubmitButton({
     setIsSubtmitPopupOpen(false);
   };
 
+  const [handleRun] = useAtom(handleRunAtom);
+
+  const onSubmit = async () => {
+    if (handleRun) {
+      await handleRun();
+    }
+  };
+
   return (
     <div>
       <div className="relative group inline-block">
@@ -147,7 +156,10 @@ export function SubmitButton({
         <button
           type="button"
           className="bg-teal-500 px-12 py-2 hover:bg-teal-600 text-white rounded"
-          onClick={handleClick}
+          onClick={() => {
+            handleClick();
+            onSubmit();
+          }}
         >
           できた
         </button>

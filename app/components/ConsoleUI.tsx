@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { JSX } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { editorContentAtom } from "~/atoms";
-import { webContainerAtom } from "~/atoms";
-import { problemAtom } from "~/atoms";
+import { webContainerAtom, handleRunAtom, problemAtom } from "~/atoms";
 
 type ConsoleUIProps = {
   mode: "console" | "sample";
-  className?: string; // 追加：外部からスタイルを適用できるようにする
+  className?: string;
 };
 
 export function ConsoleUI({
@@ -19,6 +18,17 @@ export function ConsoleUI({
   const [isLoading, setIsLoading] = useState(false);
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
+
+  const setHandleRun = useSetAtom(handleRunAtom);
+
+  useEffect(() => {
+    if (mode === "console") {
+      setHandleRun(() => handleRun);
+      return () => {
+        setHandleRun(null);
+      };
+    }
+  }, [setHandleRun, webContainer, content, problem]);
 
   const handleRun = async () => {
     try {
