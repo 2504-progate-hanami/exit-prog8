@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { signIn } from "../supabase/auth";
-import { Link } from "react-router-dom"; // リンク用のインポートを追加
+import { Link, useNavigate } from "react-router-dom"; // useNavigateをインポート
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate(); // useNavigateの初期化
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ export default function AuthPage() {
     if (error) {
       setErrorMsg(error.message);
     } else {
-      alert("ログイン成功🎉");
+      navigate("/home"); // ログイン成功時に/homeにリダイレクト
     }
   };
 
