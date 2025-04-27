@@ -66,7 +66,7 @@ export function EditorHoverButton({
               <button
                 className="px-4 py-2 bg-teal-500 text-white rounded hover:bg-teal-600"
                 onClick={() => {
-                  editorInstance?.setValue(defaultContent); // ここで設定している値にリセット
+                  editorInstance?.setValue(defaultContent);
                   closeModal();
                 }}
               >
