@@ -34,8 +34,14 @@ const Congrats: React.FC = () => {
     <div className="congrats-container">
       <h1 className="congrats-title">Congratulations! 🎉</h1>
       <p className="congrats-message">
-        You have completed all the problems! Amazing job! 🦈
+        すべての問題を解決しました！
+        <br />
       </p>
+      <img
+        src="/ninja-1.png"
+        alt="Congratulations"
+        className="w-96 mb-5 congrats-image"
+      />
       <a href="/" className="congrats-button">
         Go to LP
       </a>
