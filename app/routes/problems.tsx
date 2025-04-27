@@ -23,7 +23,7 @@ import {
   lotteryTriggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
 import { files } from "~/files";
-import levelUpIndent from "~/resources/anomalies/levelUpIndent";
+// import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 import {
   getNowProblemNumber,
   setNowProblemNumber as setSessionProblemNumber,
@@ -171,11 +171,11 @@ const Problems: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (id?.startsWith("lesson")) {
-      levelUpIndent.execute();
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (id?.startsWith("lesson")) {
+  //     levelUpIndent.execute();
+  //   }
+  // }, [id]);
 
   if (error) {
     return <div>{error}</div>;
