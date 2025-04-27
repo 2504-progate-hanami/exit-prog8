@@ -2,16 +2,17 @@ import type { Anomaly } from "~/types/anomaly";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
 import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
 import lightningEffect from "~/resources/anomalies/lightning-effect";
-import levelUpIndent from "~/resources/anomalies/levelUpIndent";
+// import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 import gamingWanko from "~/resources/anomalies/gaming-wanko";
+import shakingScreen from "~/resources/anomalies/shaking-screen"; // 新しい異変をインポート
 
 // 異変を作成したら、ここに追加してください
 export const anomalies: Anomaly[] = [
   rainbowHeader,
   snowstormEffect,
   lightningEffect,
-  levelUpIndent,
-  gamingWanko, // 新しい異変を追加
+  gamingWanko,
+  shakingScreen,
 ];
 
 /**
