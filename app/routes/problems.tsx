@@ -22,12 +22,13 @@ import { Slide } from "~/components/slide";
 import { files } from "~/files";
 import {
   getRandomAnomalies,
-  triggerAnomaly,
+  lotteryTriggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
 import {
   getNowProblemNumber,
   setNowProblemNumber as setSessionProblemNumber,
 } from "~/utils/sessionStorage";
+import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -83,6 +84,8 @@ const Problems: React.FC = () => {
     if (!id) return;
 
     if (id === "congrats") {
+      setSessionProblemNumber(0);
+      setNowProblemNumber(0);
       navigate(`/congrats`);
     }
     (async () => {
@@ -157,9 +160,10 @@ const Problems: React.FC = () => {
 
     // 異変の抽選と設定処理
     const anomalyRatio = parseFloat(import.meta.env.VITE_ANOMALY_RATIO) ?? 0.6;
-    const number = getNowProblemNumber();
     console.log("異変の発生率:", anomalyRatio);
-    if (triggerAnomaly(anomalyRatio) && number != 0) {
+    if (id !== "lesson0" && lotteryTriggerAnomaly(anomalyRatio)) {
+      console.log("異変が発生しました！");
+
       const selectedAnomalies = getRandomAnomalies(1);
       setNowAnomaly(selectedAnomalies[0]);
 
@@ -171,6 +175,12 @@ const Problems: React.FC = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (id?.startsWith("lesson")) {
+      levelUpIndent.execute();
+    }
+  }, [id]);
 
   if (error) {
     return <div>{error}</div>;

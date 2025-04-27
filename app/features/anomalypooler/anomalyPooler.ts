@@ -2,12 +2,16 @@ import type { Anomaly } from "~/types/anomaly";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
 import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
 import lightningEffect from "~/resources/anomalies/lightning-effect";
+import levelUpIndent from "~/resources/anomalies/levelUpIndent";
+import gamingWanko from "~/resources/anomalies/gaming-wanko";
 
 // 異変を作成したら、ここに追加してください
 export const anomalies: Anomaly[] = [
   rainbowHeader,
   snowstormEffect,
   lightningEffect,
+  levelUpIndent,
+  gamingWanko, // 新しい異変を追加
 ];
 
 /**
@@ -25,11 +29,15 @@ export function getRandomAnomalies(count: number = 1): Anomaly[] {
 }
 
 /**
- * 異変を発生させる。
+ * 異変を発生させるかどうかを抽選する。
  * 確率を指定することで、異変が発生する確率を調整できる。
  * @param probability 発生確率（0.0〜1.0）
  * @returns 発生させる場合はtrue、そうでない場合はfalse
  */
-export function triggerAnomaly(probability: number = 0.6): boolean {
+export function lotteryTriggerAnomaly(probability: number = 0.6): boolean {
+  if (probability < 0 || probability > 1) {
+    throw new Error("確率は0.0〜1.0の範囲で指定してください");
+  }
+
   return Math.random() < probability;
 }

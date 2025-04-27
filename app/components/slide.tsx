@@ -1,21 +1,35 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
-import type { ProblemInstruction } from "../types/problem";
-import type { CSSProperties, JSX } from "react";
 import { useAtom, useAtomValue } from "jotai";
+import type { CSSProperties, JSX } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isSlideModalAtom, problemAtom } from "~/atoms";
+import type { ProblemInstruction } from "../types/problem";
 
 export function Slide({ id }: { id: number }): JSX.Element {
+  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
   const [lesson, setLesson] = useState<ProblemInstruction | null>(null);
   const [, setIsModalOpen] = useAtom(isSlideModalAtom);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const modalRef = useRef<HTMLDivElement>(null);
   const problem = useAtomValue(problemAtom);
 
+  // スライドの総数を保持 (実際のスライド + 最後の特別スライド)
+  const [totalSlides, setTotalSlides] = useState<number>(0);
+
+  // 特別な「終了」スライドかどうかをチェック
+  const isLastSpecialSlide =
+    problem &&
+    problem.instructions &&
+    currentSlideIndex === problem.instructions.length;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsVisible(false);
         setIsModalOpen(false);
+      } else if (e.key === "ArrowRight") {
+        handleNextSlide();
+      } else if (e.key === "ArrowLeft") {
+        handlePrevSlide();
       }
     };
 
@@ -23,7 +37,27 @@ export function Slide({ id }: { id: number }): JSX.Element {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [currentSlideIndex, totalSlides]);
+
+  // スライドを次に進める関数
+  const handleNextSlide = () => {
+    if (currentSlideIndex < totalSlides - 1) {
+      setCurrentSlideIndex(currentSlideIndex + 1);
+    }
+  };
+
+  // スライドを前に戻す関数
+  const handlePrevSlide = () => {
+    if (currentSlideIndex > 0) {
+      setCurrentSlideIndex(currentSlideIndex - 1);
+    }
+  };
+
+  // 最後のスライドでモーダルを閉じる処理
+  const handleLastSlideClose = () => {
+    setIsVisible(false);
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,12 +76,29 @@ export function Slide({ id }: { id: number }): JSX.Element {
   useLayoutEffect(() => {
     const loadLesson = async () => {
       try {
-        if (problem && problem.instructions && problem.instructions[0]) {
-          setLesson({
-            title: problem.instructions[0].title,
-            description: problem.instructions[0].description,
-            imgSrc: problem.instructions[0].imgSrc,
-          });
+        if (
+          problem &&
+          problem.instructions &&
+          problem.instructions.length > 0
+        ) {
+          // 実際のスライド数 + 特別なスライドの分(1つ)
+          setTotalSlides(problem.instructions.length + 1);
+
+          // 特別な最終スライドの場合
+          if (isLastSpecialSlide) {
+            setLesson({
+              title: "学習の終了",
+              description: "",
+              imgSrc: undefined,
+            });
+          } else {
+            // 通常のスライドを表示
+            setLesson({
+              title: problem.instructions[currentSlideIndex].title,
+              description: problem.instructions[currentSlideIndex].description,
+              imgSrc: problem.instructions[currentSlideIndex].imgSrc,
+            });
+          }
         } else {
           console.error(`Lesson ${id} is missing required data.`);
           setLesson(null);
@@ -58,7 +109,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
       }
     };
     loadLesson();
-  }, [id]);
+  }, [id, currentSlideIndex, problem, isLastSpecialSlide]);
 
   if (!isVisible) {
     return <></>;
@@ -82,11 +133,16 @@ export function Slide({ id }: { id: number }): JSX.Element {
           imgSrc={lesson.imgSrc}
           title={lesson.title}
           description={lesson.description}
-          name={`Lesson ${id}`}
+          name={`Slide ${currentSlideIndex + 1}/${totalSlides}`}
           onClose={() => {
             setIsVisible(false);
             setIsModalOpen(false);
           }}
+          onPrev={handlePrevSlide}
+          onNext={isLastSpecialSlide ? handleLastSlideClose : handleNextSlide}
+          hasPrev={currentSlideIndex > 0}
+          hasNext={currentSlideIndex < totalSlides - 1}
+          isLastSpecialSlide={isLastSpecialSlide}
         />
       </div>
     </div>
@@ -139,12 +195,25 @@ function CreateSlide({
   description,
   name,
   onClose,
-}: ProblemInstruction & { name: string; onClose: () => void }) {
+  onPrev,
+  onNext,
+  hasPrev,
+  hasNext,
+  isLastSpecialSlide = false,
+}: ProblemInstruction & {
+  name: string;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  hasPrev: boolean;
+  hasNext: boolean;
+  isLastSpecialSlide?: boolean | null;
+}) {
   const nameRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const [imageTop, setImageTop] = useState<number>(0);
+  const [, setImageTop] = useState<number>(0);
 
   useLayoutEffect(() => {
     const nameHeight = nameRef.current?.offsetHeight || 0;
@@ -156,18 +225,20 @@ function CreateSlide({
 
   const styles: Record<string, CSSProperties> = {
     container: {
-      background: "radial-gradient(circle, #e0f2f7 0%, #f0f8ff 100%)",
-      border: "1px solid #ddeeff",
+      background: isLastSpecialSlide
+        ? "radial-gradient(circle, #e0f7e6 0%, #f0fff2 100%)"
+        : "radial-gradient(circle, #e0f2f7 0%, #f0f8ff 100%)",
+      border: isLastSpecialSlide ? "1px solid #ddffee" : "1px solid #ddeeff",
       borderRadius: "8px",
       padding: "20px",
       paddingLeft: "25px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       width: "650px",
-      minHeight: "450px",
-      position: "relative",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-start",
+      overflow: "hidden",
+      maxHeight: "90vh",
     },
     closeButton: {
       position: "absolute",
@@ -177,14 +248,14 @@ function CreateSlide({
       color: "white",
       border: "none",
       borderRadius: "50%",
-      width: "30px",
-      height: "30px",
+      width: "3rem",
+      height: "3rem",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
       zIndex: 10,
-      fontSize: "16px",
+      fontSize: "18px", // 16px → 18px に拡大
       fontWeight: "bold",
       transition: "background 0.2s",
     },
@@ -228,12 +299,15 @@ function CreateSlide({
     },
     imageContainer: {
       zIndex: 1,
-      position: "absolute",
-      left: "25px",
-      right: "25px",
-      top: imageTop,
+      position: "relative", // absoluteからrelativeに変更
+      margin: "0 25px", // 左右のマージンを設定
+      marginTop: "10px", // 上部に少し余白
       marginBottom: "10px",
-      overflow: "hidden",
+      flexGrow: 1, // 残りのスペースを埋める
+      display: "flex", // フレックスボックスを使用
+      alignItems: "center", // 中央揃え
+      justifyContent: "center",
+      minHeight: imgSrc ? "200px" : "150px", // 画像がある場合は最小高さを確保
     },
     imageAspectRatio: {
       paddingBottom: "56.25%",
@@ -241,14 +315,12 @@ function CreateSlide({
       height: "0",
     },
     image: {
-      position: "absolute",
-      top: "35%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: "70%",
-      height: "80%",
+      maxWidth: "100%",
+      maxHeight: "60vh", // ビューポートの60%を最大高さに
+      width: "auto",
+      height: "auto",
       borderRadius: "4px",
-      objectFit: "cover",
+      objectFit: "contain",
     },
     noImage: {
       display: "flex",
@@ -276,13 +348,34 @@ function CreateSlide({
       background: "rgba(0, 0, 0, 0.7)",
       border: "none",
       borderRadius: "4px",
-      padding: "4px 8px",
+      padding: ".8rem 1.2rem",
       cursor: "pointer",
       outline: "none",
       color: "white",
-      fontSize: "0.9em",
-      marginLeft: "4px",
-      marginRight: "4px",
+      fontSize: "1.1em",
+      marginLeft: "5px",
+      marginRight: "5px",
+      transition: "background 0.2s",
+    },
+    startButton: {
+      background: "#4CAF50",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      padding: "8px 16px",
+      fontSize: "1em",
+      fontWeight: "bold",
+      cursor: "pointer",
+      marginTop: "10px",
+      transition: "background 0.2s",
+    },
+    specialSlideContent: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: "50px",
+      textAlign: "center",
     },
   };
 
@@ -298,41 +391,72 @@ function CreateSlide({
         <h2 style={styles.title} ref={titleRef}>
           {title}
         </h2>
-        <div style={styles.descriptionContainer}>
-          <p style={styles.description} ref={descriptionRef}>
-            {description}
+      </div>
+
+      {isLastSpecialSlide ? (
+        <div style={styles.specialSlideContent}>
+          <p style={{ fontSize: "1.2em", margin: "20px 0" }}>
+            準備はできましたか？演習に進みましょう！
           </p>
+          <button style={styles.startButton} onClick={onNext}>
+            演習を始める
+          </button>
         </div>
-      </div>
-      <div style={styles.imageContainer} ref={imageContainerRef}>
-        <div style={styles.imageAspectRatio}>
-          {imgSrc ? (
-            <img src={imgSrc} alt={title} style={styles.image} />
-          ) : (
-            <div style={styles.noImage}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                style={styles.noImageSvg}
-                className="w-16 h-16"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.5 1.5"
-                />
-              </svg>
-              <span>No Image</span>
+      ) : (
+        <>
+          <div style={styles.descriptionContainer}>
+            <p style={styles.description} ref={descriptionRef}>
+              {description}
+            </p>
+          </div>
+          <div style={styles.imageContainer} ref={imageContainerRef}>
+            <div style={styles.imageAspectRatio}>
+              {imgSrc ? (
+                <img src={imgSrc} alt={title} style={styles.image} />
+              ) : (
+                <div style={styles.noImage}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    style={styles.noImageSvg}
+                    className="w-16 h-16"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.5 1.5"
+                    />
+                  </svg>
+                  <span>No Image</span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
+
       <div style={styles.arrowContainer}>
-        <button style={styles.arrowButton}>{"<"}</button>
-        <button style={styles.arrowButton}>{">"}</button>
+        {!isLastSpecialSlide ? (
+          <>
+            <button
+              style={styles.arrowButton}
+              onClick={onPrev}
+              disabled={!hasPrev}
+            >
+              {"<"}
+            </button>
+            <button
+              style={styles.arrowButton}
+              onClick={onNext}
+              disabled={!hasNext}
+            >
+              {">"}
+            </button>
+          </>
+        ) : null}
       </div>
     </div>
   );
