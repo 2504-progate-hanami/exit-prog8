@@ -94,3 +94,4 @@ export const temporaryEditorConfigAtom = atom(
     }
   },
 );
+export const handleRunAtom = atom<(() => Promise<void>) | null>(null);

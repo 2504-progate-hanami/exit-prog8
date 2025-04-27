@@ -1,34 +1,33 @@
 import { WebContainer } from "@webcontainer/api";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  anomalyPoolAtom,
+  checkStateAtom,
+  editorContentAtom,
+  isDebugModeAtom,
+  isSlideModalAtom,
+  nowAnomalyAtom,
+  nowProblemNumberAtom,
   problemAtom,
   webContainerAtom,
-  isSlideModalAtom,
-  isDebugModeAtom,
-  editorContentAtom,
-  checkStateAtom,
-  nowProblemNumberAtom,
-  nowAnomalyAtom,
 } from "~/atoms";
 import { ConsoleUI } from "~/components/ConsoleUI";
 import { DebugModePopup } from "~/components/DebugModePopup";
 import { EditorComponent } from "~/components/EditorComponent";
 import { ProcedureComponent } from "~/components/procedureComponent";
 import { Slide } from "~/components/slide";
-import { files } from "~/files";
 import {
   getRandomAnomalies,
   lotteryTriggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
+import { files } from "~/files";
+// import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 import {
   getNowProblemNumber,
   setNowProblemNumber as setSessionProblemNumber,
 } from "~/utils/sessionStorage";
-import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,8 +36,6 @@ const Problems: React.FC = () => {
   const setWebcontainer = useSetAtom(webContainerAtom);
   const [problem, setProblem] = useAtom(problemAtom);
   const [, setNowAnomaly] = useAtom(nowAnomalyAtom);
-
-  const setAnomalyPool = useSetAtom(anomalyPoolAtom);
   const [isDebugMode, setIsDebugMode] = useAtom(isDebugModeAtom);
 
   const [isSlideModal, setIsSlideModal] = useAtom(isSlideModalAtom);
@@ -167,8 +164,6 @@ const Problems: React.FC = () => {
       const selectedAnomalies = getRandomAnomalies(1);
       setNowAnomaly(selectedAnomalies[0]);
 
-      setAnomalyPool(selectedAnomalies);
-
       // 選択した異変を実行
       selectedAnomalies.forEach((anomaly) => {
         anomaly.execute();
@@ -176,11 +171,11 @@ const Problems: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (id?.startsWith("lesson")) {
-      levelUpIndent.execute();
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (id?.startsWith("lesson")) {
+  //     levelUpIndent.execute();
+  //   }
+  // }, [id]);
 
   if (error) {
     return <div>{error}</div>;
