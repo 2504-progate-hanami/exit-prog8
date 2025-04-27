@@ -28,6 +28,7 @@ import {
   getNowProblemNumber,
   setNowProblemNumber as setSessionProblemNumber,
 } from "~/utils/sessionStorage";
+import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 
 const Problems: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -83,6 +84,8 @@ const Problems: React.FC = () => {
     if (!id) return;
 
     if (id === "congrats") {
+      setSessionProblemNumber(0);
+      setNowProblemNumber(0);
       navigate(`/congrats`);
     }
     (async () => {
@@ -171,6 +174,12 @@ const Problems: React.FC = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    if (id?.startsWith("lesson")) {
+      levelUpIndent.execute();
+    }
+  }, [id]);
 
   if (error) {
     return <div>{error}</div>;

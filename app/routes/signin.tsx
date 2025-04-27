@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "../supabase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
@@ -6,6 +6,7 @@ import { FaFacebook, FaTwitter, FaApple } from "react-icons/fa";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
+  const [emailSuggestions, setEmailSuggestions] = useState<string[]>([]); // 候補リスト用の状態を追加
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -16,6 +17,14 @@ export default function AuthPage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email"); // 保存されたメールアドレスを取得
+    if (savedEmail) {
+      setEmail(savedEmail); // 初期値としてセット
+      setEmailSuggestions([savedEmail]); // 候補リストに追加
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +49,7 @@ export default function AuthPage() {
 
     if (!valid) return;
 
+    localStorage.setItem("email", email); // メールアドレスを保存
     const { error } = await signIn(email, password);
     if (error) {
       setErrorMsg(error.message);
@@ -79,6 +89,15 @@ export default function AuthPage() {
           {emailError && (
             <p className="text-red-500 text-sm mt-1">{emailError}</p>
           )}
+
+            list="email-suggestions" // 候補リストを指定
+            required
+          />
+          <datalist id="email-suggestions">
+            {emailSuggestions.map((suggestion, index) => (
+              <option key={index} value={suggestion} /> // 候補を表示
+            ))}
+          </datalist>
         </div>
 
         <div>
