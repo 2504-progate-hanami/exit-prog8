@@ -8,6 +8,7 @@ const LP: React.FC = () => {
         fontFamily: "'Arial', sans-serif",
         minHeight: "100vh",
         overflow: "hidden",
+        backgroundColor: "#f9fbfe", // 背景色を変更
       }}
     >
       {/* 背景の黒白斜め分割 */}
@@ -23,7 +24,21 @@ const LP: React.FC = () => {
         }}
       ></div>
 
-      {/* タイトル */}
+      {/* "このProgate、なんか変...?" を一番上に移動し、文字サイズをアップ */}
+      <div
+        style={{
+          textAlign: "center",
+          padding: "20px",
+          color: "#2b546a", // 文字色を変更
+          fontSize: "2.5rem", // 文字サイズをさらに大きく
+          fontWeight: "bold",
+          lineHeight: "1.5", // 行間を調整
+        }}
+      >
+        <p>このProgate、なんか変...?</p>
+      </div>
+
+      {/* タイトルをチャレンジボタンの下に移動 */}
       <div
         style={{
           textAlign: "center",
@@ -59,32 +74,67 @@ const LP: React.FC = () => {
               fontSize: "3rem",
             }}
           >
-            番出口
+            版出口
           </span>
         </h1>
-        <p style={{ fontSize: "1.2rem", color: "#ddd", marginTop: "20px" }}>
-          Login to get started
-        </p>
-        {/* ログインボタン */}
+      </div>
+
+      {/* ログインボタンを変更 */}
+      <div style={{ textAlign: "center" }}>
+        {" "}
+        {/* ボタンを中央揃え */}
         <button
           style={{
-            backgroundColor: "#007BFF",
+            backgroundColor: "#fc5476", // ボタンの背景色を変更
             color: "white",
             border: "none",
-            padding: "10px 20px",
+            padding: "10px 20px", // ボタンサイズを小さく調整
             borderRadius: "5px",
             cursor: "pointer",
-            fontSize: "16px",
+            fontSize: "16px", // 文字サイズを少し小さく
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             marginTop: "20px",
-            transition: "transform 0.3s",
+            transition: "background-color 0.3s", // ホバー時の色変更
           }}
-          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          onClick={() => (window.location.href = "/signin")}
+          onMouseOver={(e) => {
+            document.documentElement.style.backgroundColor = "#2b546a"; // 全体の背景色を紺色に変更
+            e.currentTarget.style.backgroundColor = "#2b546a"; // ボタンの背景色を変更
+            e.currentTarget.innerHTML = "??????????????????????????"; // 文字を変更
+          }}
+          onMouseOut={(e) => {
+            document.documentElement.style.backgroundColor = "#f9fbfe"; // 全体の背景色を元に戻す
+            e.currentTarget.style.backgroundColor = "#fc5476"; // ボタンの背景色を元に戻す
+            e.currentTarget.innerHTML = "まずは無料でチャレンジ"; // 元の文字に戻す
+          }}
+          onClick={() => (window.location.href = "/signup")}
         >
-          Login
+          まずは無料でチャレンジ
         </button>
+      </div>
+
+      {/* ninja-3.png を画面下部に配置 */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          left: "0",
+          width: "100%", // 横幅を100%に設定
+          height: "300px", // 高さはそのまま
+          backgroundColor: "#89e7ce", // 背景色を89e7ceに設定
+          display: "flex",
+          justifyContent: "center", // 中央揃え
+          alignItems: "center", // 中央揃え
+        }}
+      >
+        <img
+          src="/ninja-3.png"
+          alt="ninja-3"
+          style={{
+            width: "auto", // 幅を自動調整
+            height: "100%", // 高さを100%に設定
+            objectFit: "contain", // 画像をコンテナにフィットさせる
+          }}
+        />
       </div>
 
       {/* アニメーション用のスタイル */}
