@@ -206,7 +206,6 @@ function CreateSlide({
       marginTop: "5px",
     },
     descriptionContainer: {
-      position: "absolute",
       top: "30px",
       right: "10px",
       zIndex: 3,
