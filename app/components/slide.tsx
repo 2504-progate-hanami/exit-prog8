@@ -88,7 +88,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
           if (isLastSpecialSlide) {
             setLesson({
               title: "学習の終了",
-              description: "これでスライドは終わりです。演習を始めましょう！",
+              description: "",
               imgSrc: undefined,
             });
           } else {
@@ -248,14 +248,14 @@ function CreateSlide({
       color: "white",
       border: "none",
       borderRadius: "50%",
-      width: "30px",
-      height: "30px",
+      width: "3rem",
+      height: "3rem",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
       zIndex: 10,
-      fontSize: "16px",
+      fontSize: "18px", // 16px → 18px に拡大
       fontWeight: "bold",
       transition: "background 0.2s",
     },
@@ -347,13 +347,14 @@ function CreateSlide({
       background: "rgba(0, 0, 0, 0.7)",
       border: "none",
       borderRadius: "4px",
-      padding: "4px 8px",
+      padding: ".8rem 1.2rem",
       cursor: "pointer",
       outline: "none",
       color: "white",
-      fontSize: "0.9em",
-      marginLeft: "4px",
-      marginRight: "4px",
+      fontSize: "1.1em",
+      marginLeft: "5px",
+      marginRight: "5px",
+      transition: "background 0.2s",
     },
     startButton: {
       background: "#4CAF50",
@@ -389,11 +390,6 @@ function CreateSlide({
         <h2 style={styles.title} ref={titleRef}>
           {title}
         </h2>
-        <div style={styles.descriptionContainer}>
-          <p style={styles.description} ref={descriptionRef}>
-            {description}
-          </p>
-        </div>
       </div>
 
       {isLastSpecialSlide ? (
@@ -406,32 +402,39 @@ function CreateSlide({
           </button>
         </div>
       ) : (
-        <div style={styles.imageContainer} ref={imageContainerRef}>
-          <div style={styles.imageAspectRatio}>
-            {imgSrc ? (
-              <img src={imgSrc} alt={title} style={styles.image} />
-            ) : (
-              <div style={styles.noImage}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  style={styles.noImageSvg}
-                  className="w-16 h-16"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.5 1.5"
-                  />
-                </svg>
-                <span>No Image</span>
-              </div>
-            )}
+        <>
+          <div style={styles.descriptionContainer}>
+            <p style={styles.description} ref={descriptionRef}>
+              {description}
+            </p>
           </div>
-        </div>
+          <div style={styles.imageContainer} ref={imageContainerRef}>
+            <div style={styles.imageAspectRatio}>
+              {imgSrc ? (
+                <img src={imgSrc} alt={title} style={styles.image} />
+              ) : (
+                <div style={styles.noImage}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    style={styles.noImageSvg}
+                    className="w-16 h-16"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.5 1.5"
+                    />
+                  </svg>
+                  <span>No Image</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
       )}
 
       <div style={styles.arrowContainer}>
