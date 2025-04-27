@@ -22,7 +22,7 @@ import { Slide } from "~/components/slide";
 import { files } from "~/files";
 import {
   getRandomAnomalies,
-  triggerAnomaly,
+  lotteryTriggerAnomaly,
 } from "~/features/anomalypooler/anomalyPooler";
 import {
   getNowProblemNumber,
@@ -159,7 +159,7 @@ const Problems: React.FC = () => {
     const anomalyRatio = parseFloat(import.meta.env.VITE_ANOMALY_RATIO) ?? 0.6;
     const number = getNowProblemNumber();
     console.log("異変の発生率:", anomalyRatio);
-    if (triggerAnomaly(anomalyRatio) && number != 0) {
+    if (lotteryTriggerAnomaly(anomalyRatio) && number != 0) {
       const selectedAnomalies = getRandomAnomalies(1);
       setNowAnomaly(selectedAnomalies[0]);
 
