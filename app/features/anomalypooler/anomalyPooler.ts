@@ -4,6 +4,7 @@ import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
 import lightningEffect from "~/resources/anomalies/lightning-effect";
 import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 import gamingWanko from "~/resources/anomalies/gaming-wanko";
+import levelUpFontSize from "~/resources/anomalies/levelUpFontSize";
 // import levelUpFontSize from "~/resources/anomalies/levelUpFontSize";
 
 // 異変を作成したら、ここに追加してください
@@ -12,8 +13,8 @@ export const anomalies: Anomaly[] = [
   snowstormEffect,
   lightningEffect,
   levelUpIndent,
-  gamingWanko, // 新しい異変を追加
-  // levelUpFontSize, // 新しい異変を追加
+  gamingWanko,
+  levelUpFontSize,
 ];
 
 /**

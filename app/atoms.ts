@@ -41,3 +41,56 @@ export const debugAnomaliesAtom = atom<Anomaly[]>([]);
 
 // セッションストレージからの初期値を使用
 export const nowProblemNumberAtom = atom<number>(getInitialProblemNumber());
+
+// モナコエディタの設定を管理するatom
+interface MonacoEditorConfig {
+  fontSize?: number;
+  tabSize?: number;
+  theme?: string;
+  lineHeight?: number;
+  fontFamily?: string;
+  // 他にも必要な設定があれば追加
+}
+
+// デフォルト設定
+const defaultEditorConfig: MonacoEditorConfig = {
+  fontSize: 14,
+  tabSize: 2,
+  theme: "vs-dark",
+  lineHeight: 20,
+  fontFamily: "monospace",
+};
+
+// 現在の設定を保持するatom
+export const monacoEditorConfigAtom =
+  atom<MonacoEditorConfig>(defaultEditorConfig);
+
+// 設定をリセットする関数を含むatom
+export const resetEditorConfigAtom = atom(
+  (get) => get(monacoEditorConfigAtom),
+  (get, set) => {
+    set(monacoEditorConfigAtom, defaultEditorConfig);
+  },
+);
+
+// 特定の設定だけを一時的に変更し、指定時間後に元に戻すための関数を含むatom
+export const temporaryEditorConfigAtom = atom(
+  (get) => get(monacoEditorConfigAtom),
+  (get, set, config: MonacoEditorConfig & { durationMs?: number }) => {
+    const { durationMs, ...editorConfig } = config;
+    const currentConfig = get(monacoEditorConfigAtom);
+
+    // 現在の設定をバックアップ
+    const backupConfig = { ...currentConfig };
+
+    // 新しい設定を適用
+    set(monacoEditorConfigAtom, { ...currentConfig, ...editorConfig });
+
+    // 指定時間が設定されていれば、その後に元に戻す
+    if (durationMs && durationMs > 0) {
+      setTimeout(() => {
+        set(monacoEditorConfigAtom, backupConfig);
+      }, durationMs);
+    }
+  },
+);
