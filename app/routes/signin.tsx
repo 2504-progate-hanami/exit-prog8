@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { signIn } from "../supabase/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { FaFacebook, FaTwitter, FaApple } from "react-icons/fa";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -117,10 +119,39 @@ export default function AuthPage() {
         </button>
       </form>
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-500">
           パスワードを忘れた場合は{" "}
           <Link to="/forgot" className="text-blue-600 hover:underline">
             こちら
+          </Link>
+        </p>
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="mx-4 text-gray-500">または</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+        <div className="space-y-2">
+          <button className="w-full p-2 flex items-center justify-center border border-gray-200 bg-white rounded transition-all duration-500 hover:border-black">
+            <FcGoogle className="w-4 h-4 mr-2" />
+            <span className="text-xs text-gray-600">Googleで続ける</span>
+          </button>
+          <button className="w-full p-2 flex items-center justify-center border border-gray-200 bg-white rounded transition-all duration-500 hover:border-black">
+            <FaFacebook className="w-4 h-4 mr-2 text-[#3b5998]" />
+            <span className="text-xs text-gray-600">Facebookで続ける</span>
+          </button>
+          <button className="w-full p-2 flex items-center justify-center border border-gray-200 bg-white rounded transition-all duration-500 hover:border-black">
+            <FaTwitter className="w-4 h-4 mr-2 text-[#1DA1F2]" />
+            <span className="text-xs text-gray-600">Xで続ける</span>
+          </button>
+          <button className="w-full p-2 flex items-center justify-center border border-gray-200 bg-white rounded transition-all duration-500 hover:border-black">
+            <FaApple className="w-4 h-4 mr-2 text-black" />
+            <span className="text-xs text-gray-600">Appleで続ける</span>
+          </button>
+        </div>
+        <p className="text-sm text-gray-500 mt-4">
+          アカウントをお持ちでないですか？{" "}
+          <Link to="/signup" className="text-blue-600 hover:underline">
+            新規登録
           </Link>
         </p>
       </div>
