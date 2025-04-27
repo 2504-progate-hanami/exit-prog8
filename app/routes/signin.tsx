@@ -89,11 +89,11 @@ export default function AuthPage() {
           {emailError && (
             <p className="text-red-500 text-sm mt-1">{emailError}</p>
           )}
-
+          {/* 
           <input
             list="email-suggestions" // 候補リストを指定
             required
-          />
+          /> */}
           <datalist id="email-suggestions">
             {emailSuggestions.map((suggestion, index) => (
               <option key={index} value={suggestion} /> // 候補を表示
