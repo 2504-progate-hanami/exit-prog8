@@ -11,4 +11,9 @@ export default defineConfig({
     tsconfigPaths(),
     crossOriginIsolation(),
   ],
+  build: {
+    rollupOptions: {
+      external: ["react-icons"], // ここで外部モジュールとして指定
+    },
+  },
 });
