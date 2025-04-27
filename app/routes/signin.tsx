@@ -90,6 +90,7 @@ export default function AuthPage() {
             <p className="text-red-500 text-sm mt-1">{emailError}</p>
           )}
 
+          <input
             list="email-suggestions" // 候補リストを指定
             required
           />
