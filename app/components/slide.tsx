@@ -413,23 +413,8 @@ function CreateSlide({
               {imgSrc ? (
                 <img src={imgSrc} alt={title} style={styles.image} />
               ) : (
-                <div style={styles.noImage}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    style={styles.noImageSvg}
-                    className="w-16 h-16"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.5 1.5"
-                    />
-                  </svg>
-                  <span>No Image</span>
+                <div style={styles.ImageAspectRatio}>
+                  <img src="/ninja-1.png" alt="No Image" style={styles.image} />
                 </div>
               )}
             </div>
