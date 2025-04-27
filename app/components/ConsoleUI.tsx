@@ -22,10 +22,12 @@ export function ConsoleUI({
   const setHandleRun = useSetAtom(handleRunAtom);
 
   useEffect(() => {
-    setHandleRun(() => handleRun);
-    return () => {
-      setHandleRun(null);
-    };
+    if (mode === "console") {
+      setHandleRun(() => handleRun);
+      return () => {
+        setHandleRun(null);
+      };
+    }
   }, [setHandleRun, webContainer, content, problem]);
 
   const handleRun = async () => {
