@@ -21,14 +21,18 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <div className="p-4 max-w-md mx-auto text-sm">
+      {" "}
+      {/* 全体の文字サイズを小さくする */}
       <h2 className="text-2xl font-bold mb-4">サインアップ</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">Email</label>
           <input
             type="email"
-            className="w-full border p-2 rounded"
+            placeholder="メールアドレス"
+            className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#31c8d5] placeholder-[#d0d0e2] transition-colors ${
+              errorMsg ? "border-red-500" : "border-gray-300"
+            }`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -36,10 +40,12 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Password</label>
           <input
             type="password"
-            className="w-full border p-2 rounded"
+            placeholder="パスワード"
+            className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#31c8d5] placeholder-[#d0d0e2] transition-colors ${
+              errorMsg ? "border-red-500" : "border-gray-300"
+            }`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -47,24 +53,33 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Name</label>
           <input
             type="text"
-            className="w-full border p-2 rounded"
+            placeholder="名前"
+            className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#31c8d5] placeholder-[#d0d0e2] transition-colors ${
+              errorMsg ? "border-red-500" : "border-gray-300"
+            }`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
 
-        {errorMsg && <p className="text-red-500">{errorMsg}</p>}
-        {successMsg && <p className="text-green-600">{successMsg}</p>}
+        {errorMsg && <p className="text-red-500 text-sm mt-1">{errorMsg}</p>}
+        {successMsg && (
+          <p className="text-green-600 text-sm mt-1">{successMsg}</p>
+        )}
 
         <button
           type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className={`w-full p-2 rounded text-center transition-colors ${
+            !email || !password || !name
+              ? "bg-[#f0f4f8] text-[#d0d0e2] cursor-not-allowed"
+              : "bg-[#31c8d5] text-white hover:bg-[#23a4b0]"
+          }`}
+          disabled={!email || !password || !name}
         >
-          サインアップ
+          新規登録
         </button>
       </form>
     </div>
