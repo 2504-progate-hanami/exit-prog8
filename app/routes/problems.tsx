@@ -2,7 +2,7 @@ import { WebContainer } from "@webcontainer/api";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState, useCallback } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   anomalyPoolAtom,
   problemAtom,
@@ -45,6 +45,7 @@ const Problems: React.FC = () => {
   const [, setEditorContent] = useAtom(editorContentAtom);
   const [checkState, setCheckState] = useAtom(checkStateAtom);
   const [nowProblemNumber, setNowProblemNumber] = useAtom(nowProblemNumberAtom);
+  const navigate = useNavigate();
 
   // キーボードショートカットの処理
   const handleKeyDown = useCallback(
@@ -81,6 +82,9 @@ const Problems: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
+    if (id === "congrats") {
+      navigate(`/congrats`);
+    }
     (async () => {
       try {
         const problemModule = await import(`../resources/problems/${id}.ts`);

@@ -16,6 +16,5 @@ export default [
   // route("explain", "routes/detailGame.tsx"),
 
   route("congrats", "routes/congrats.tsx"),
-
   route("box", "routes/box.tsx"),
 ] satisfies RouteConfig;
