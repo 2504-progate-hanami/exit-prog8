@@ -137,6 +137,14 @@ export function SubmitButton({
     <div>
       <div className="relative group inline-block">
         <button
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+          onClick={goBack}
+          style={{ marginRight: "auto" }} // 左に寄せるために追加
+        >
+          ← 引き返す
+        </button>
+        <div style={{ width: "20px" }}></div>
+        <button
           type="button"
           className="bg-teal-500 px-12 py-2 hover:bg-teal-600 text-white rounded"
           onClick={handleClick}
@@ -189,12 +197,6 @@ export function SubmitButton({
               </div>
             ) : (
               <div className="mt-4 pt-2 border-t border-gray-200 flex justify-between">
-                <button
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
-                  onClick={goBack}
-                >
-                  ← 引き返す
-                </button>
                 <button
                   className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-r flex items-center justify-center"
                   onClick={() => checkCorrect()}
