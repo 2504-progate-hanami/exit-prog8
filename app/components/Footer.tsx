@@ -1,15 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SlideCheckButton } from "./checkSlideButton";
 import { useAtom } from "jotai";
 import { nowProblemNumberAtom } from "~/atoms";
+import { getNowProblemNumber } from "~/utils/sessionStorage";
 
 export function Footer() {
+  // atomからの値を使うけど、必要に応じてセッションストレージからも取得する
   const [nowProblemNumber] = useAtom(nowProblemNumberAtom);
-  const progress = nowProblemNumber < 2 ? 0 : (nowProblemNumber / 8) * 100;
+  const [problemNumber, setProblemNumber] = useState<number>(0);
+
+  // マウント時とnowProblemNumberが変わったときに更新
+  useEffect(() => {
+    // セッションストレージから値を取得
+    const sessionValue = getNowProblemNumber();
+
+    // atom値とセッションストレージ値を比較し、大きい方を使用
+    const actualValue = Math.max(sessionValue, nowProblemNumber);
+
+    console.log("Footer更新:", {
+      atomValue: nowProblemNumber,
+      sessionValue,
+      actualValue,
+    });
+
+    setProblemNumber(actualValue);
+  }, [nowProblemNumber]);
+
+  // 表示用の進捗バー計算
+  const progress = problemNumber < 2 ? 0 : (problemNumber / 8) * 100;
+
   return (
     <footer
       style={{
-        backgroundColor: "#fff", // 背景色を白に変更
+        backgroundColor: "#fff",
         color: "#333",
         display: "flex",
         justifyContent: "space-between",
@@ -18,7 +41,7 @@ export function Footer() {
         position: "relative",
         bottom: 0,
         width: "100%",
-        borderTop: "1px solid #ddd", // 境界線を追加
+        borderTop: "1px solid #ddd",
       }}
     >
       {/* 左側にボタンを配置 */}
@@ -33,19 +56,19 @@ export function Footer() {
       >
         <div
           style={{
-            width: "200px", // 横幅の20%
-            height: "20px", // 高さを太く調整
-            backgroundColor: "#ddd", // 背景色
-            borderRadius: "10px", // 丸みを調整
+            width: "200px",
+            height: "20px",
+            backgroundColor: "#ddd",
+            borderRadius: "10px",
             overflow: "hidden",
             position: "relative",
           }}
         >
           <div
             style={{
-              width: `${progress}%`, // プログレスの進捗（仮に50%）
+              width: `${progress}%`,
               height: "100%",
-              backgroundColor: "#8AC75A", // プログレスバーの色
+              backgroundColor: "#8AC75A",
             }}
           ></div>
         </div>

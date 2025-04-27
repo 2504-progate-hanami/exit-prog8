@@ -1,41 +1,97 @@
 import type { Problem } from "~/types/problem";
 
-const procedure = document.createElement("div");
-procedure.innerHTML =
-  "<p>この問題では、<code>console.log</code> を使って 'Hello world' を出力するプログラムを書いてみよう！</p>";
+const procedure6 = document.createElement("div");
+procedure6.innerHTML = `
+  <p>この問題では、JavaScriptの「オプショナルチェーン演算子（?.）」について学びます。</p>
+  <p>オプショナルチェーンは、深くネストされたオブジェクトのプロパティに安全にアクセスするための便利な演算子です！</p>
+  <p>この問題では、ユーザーデータの中から深い階層のプロパティを安全に取得する方法を学びましょう！</p>
+`;
 
 export default {
-  name: "Hello World 問題",
+  name: "オプショナルチェーン（?.）を使ってみよう",
   instructions: [
     {
-      title: "console.log とは",
+      title: "オプショナルチェーンとは？",
       description:
-        "console.log は、JavaScriptでコンソールにメッセージを出力するための関数やね～。デバッグや確認に便利！",
+        "オプショナルチェーン演算子（?.）は、nullやundefinedの可能性があるオブジェクトのプロパティにアクセスする際にエラーを防ぐ機能です。存在しない場合は自動的にundefinedを返します。",
     },
     {
-      title: "Hello world を出力しよう",
+      title: "ネストされたデータにアクセスしよう",
       description:
-        "プログラムの基本中の基本！<code>console.log</code> を使って 'Hello world' を出力してみよう～",
+        "与えられたユーザーデータから、user1とuser2それぞれのaddress.city.nameプロパティにオプショナルチェーンを使ってアクセスし、コンソールに出力してみましょう！",
+    },
+    {
+      title: "ヒント",
+      description:
+        "通常のドット記法でアクセスするとnullやundefinedのプロパティでエラーになりますが、obj?.prop?.subpropのようにオプショナルチェーンを使うと安全にアクセスできます。",
     },
   ],
-  procedure,
-  initialCode: `// ここにコードを書いてね！`,
-  answerCode: `console.log("Hello world");`,
+  procedure: procedure6,
+  initialCode: `// ユーザーデータ（user2のaddressプロパティは存在しない）
+const user1 = {
+  name: "鈴木",
+  age: 28,
+  address: {
+    city: {
+      name: "東京",
+      code: "100-0001"
+    }
+  }
+};
+
+const user2 = {
+  name: "田中",
+  age: 32
+  // addressプロパティがない
+};
+
+// オプショナルチェーン（?.）を使って、
+// 各ユーザーのaddress.city.nameプロパティにアクセスして
+// コンソールに出力してください
+`,
+  answerCode: `// ユーザーデータ（user2のaddressプロパティは存在しない）
+const user1 = {
+  name: "鈴木",
+  age: 28,
+  address: {
+    city: {
+      name: "東京",
+      code: "100-0001"
+    }
+  }
+};
+
+const user2 = {
+  name: "田中",
+  age: 32
+  // addressプロパティがない
+};
+
+// オプショナルチェーンを使って安全にプロパティにアクセス
+console.log(user1?.address?.city?.name); // "東京"
+console.log(user2?.address?.city?.name); // undefined
+`,
   checkers: {
     static: [
       {
-        description: "console.log が使われていることを確認する",
+        description: "オプショナルチェーン演算子が使われていることを確認する",
+        check: (code: string) => /\?\./.test(code),
+        message:
+          "オプショナルチェーン演算子（?.）を使ってプロパティにアクセスしてください",
+      },
+      {
+        description: "console.logが使われていることを確認する",
         check: (code: string) => /console\.log\(/.test(code),
-        message: "console.log を使ってください",
+        message: "console.logを使って結果を出力してください",
       },
     ],
     dynamic: [
       {
-        description: "'Hello world' が出力されることを確認する",
-        check: (out: string) => /Hello world/.test(out),
-        message: "'Hello world' を出力してください",
+        description: "正しい値が出力されることを確認する",
+        check: (out: string) => /東京/.test(out) && /undefined/.test(out),
+        message: "undefinedと'東京'の両方が出力されるようにしてください",
       },
     ],
   },
-  nextProblemId: "2",
+  nextProblemId: "lesson7",
 } as Problem;
