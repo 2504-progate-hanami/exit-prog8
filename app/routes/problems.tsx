@@ -157,9 +157,10 @@ const Problems: React.FC = () => {
 
     // 異変の抽選と設定処理
     const anomalyRatio = parseFloat(import.meta.env.VITE_ANOMALY_RATIO) ?? 0.6;
-    const number = getNowProblemNumber();
     console.log("異変の発生率:", anomalyRatio);
-    if (lotteryTriggerAnomaly(anomalyRatio) && number != 0) {
+    if (id !== "lesson0" && lotteryTriggerAnomaly(anomalyRatio)) {
+      console.log("異変が発生しました！");
+
       const selectedAnomalies = getRandomAnomalies(1);
       setNowAnomaly(selectedAnomalies[0]);
 
