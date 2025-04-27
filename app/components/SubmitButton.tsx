@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import type { JSX } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   checkStateAtom,
   problemAtom,
@@ -29,6 +29,7 @@ export function SubmitButton({
   const [, setNowProblemNumber] = useAtom(nowProblemNumberAtom);
   const [nowAnomaly] = useAtom(nowAnomalyAtom);
   const navigate = useNavigate();
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const checkCorrect = () => {
     // 異変がある場合はlesson1へリセット
@@ -133,6 +134,19 @@ export function SubmitButton({
     setIsSubtmitPopupOpen(false);
   };
 
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && closeButtonRef.current) {
+        closeButtonRef.current.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscKey);
+    return () => {
+      window.removeEventListener("keydown", handleEscKey);
+    };
+  }, []);
+
   return (
     <div>
       <div className="relative group inline-block">
@@ -163,11 +177,15 @@ export function SubmitButton({
             className={`fixed bottom-30 left-47/100 transform -translate-x-1/2 bg-white border-l-4 ${isSuccess ? "border-green-500" : "border-red-500"} text-black px-15 py-7 rounded shadow-lg z-50 max-w-md`}
           >
             <button
+              ref={closeButtonRef}
               onClick={closePopup}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 group"
               aria-label="Close"
             >
               ✖
+              <span className="absolute top-full right-0 mt-1 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                esc
+              </span>
             </button>
             <div className="flex items-center mb-2">
               {isSuccess ? (
