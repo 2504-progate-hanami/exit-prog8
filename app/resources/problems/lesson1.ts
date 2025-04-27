@@ -14,6 +14,7 @@ export default {
       title: "三項演算子とは？",
       description:
         "三項演算子は条件式 ? 真の場合の値 : 偽の場合の値 という形で書きます。if-elseより短く書けるため便利です。",
+      imgSrc: "/ninja-1.png",
     },
     {
       title: "年齢チェッカーを作ろう",

@@ -2,12 +2,14 @@ import type { Anomaly } from "~/types/anomaly";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
 import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
 import lightningEffect from "~/resources/anomalies/lightning-effect";
+import gamingWanko from "~/resources/anomalies/gaming-wanko";
 
 // 異変を作成したら、ここに追加してください
 export const anomalies: Anomaly[] = [
   rainbowHeader,
   snowstormEffect,
   lightningEffect,
+  gamingWanko, // 新しい異変を追加
 ];
 
 /**
@@ -30,6 +32,6 @@ export function getRandomAnomalies(count: number = 1): Anomaly[] {
  * @param probability 発生確率（0.0〜1.0）
  * @returns 発生させる場合はtrue、そうでない場合はfalse
  */
-export function triggerAnomaly(probability: number = 0.6): boolean {
+export function triggerAnomaly(probability: number = 1.0): boolean {
   return Math.random() < probability;
 }
