@@ -1,7 +1,7 @@
 import Editor from "@monaco-editor/react";
 import { useAtom, useSetAtom } from "jotai";
 import type * as monaco from "monaco-editor";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   anomalyPoolAtom,
   checkStateAtom,
@@ -36,42 +36,7 @@ export function EditorComponent() {
     console.log("現在のanomalyPool:", anomalyPool);
   }, [anomalyPool]);
 
-  useEffect(() => {
-    if (webContainer && editorInstance) {
-      console.log("WebContainer準備完了！エディタアクションを設定するよ🦈");
-
-      const actionId = "execute-custom-action-with-webcontainer";
-
-      // @ts-expect-error Monaco Editor の actions API には型定義がないため
-      const actions = editorInstance.getActions();
-      // @ts-expect-error actions.find にも型定義がないため
-      const existingAction = actions.find((action) => action.id === actionId);
-      if (existingAction) {
-        // @ts-expect-error removeAction メソッドにも型定義がないため
-        editorInstance.removeAction(actionId);
-      }
-
-      editorInstance.addAction({
-        id: actionId,
-        label: "Execute Custom Action",
-        keybindings: [
-          // @ts-expect-error monaco.KeyMod と monaco.KeyCode の型定義がないため
-          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
-        ],
-        contextMenuGroupId: "navigation",
-        contextMenuOrder: 1.5,
-        run: function (): void {
-          checkHandle();
-        },
-      });
-
-      console.log(
-        "エディタアクションの設定完了！Ctrl+Enterでコード実行できるようになったよ🦈",
-      );
-    }
-  }, [webContainer, editorInstance]);
-
-  function checkHandle() {
+  const checkHandle = useCallback(() => {
     if (!webContainer) {
       console.error("webContainer が null です。処理を中断します。");
       setCheckState({
@@ -177,7 +142,42 @@ export function EditorComponent() {
           message: `エラーが発生しました: ${error.message}`,
         });
       });
-  }
+  }, [webContainer, problem, content, setCheckState]);
+
+  useEffect(() => {
+    if (webContainer && editorInstance) {
+      console.log("WebContainer準備完了！エディタアクションを設定するよ🦈");
+
+      const actionId = "execute-custom-action-with-webcontainer";
+
+      // @ts-expect-error Monaco Editor の actions API には型定義がないため
+      const actions = editorInstance.getActions();
+      // @ts-expect-error actions.find にも型定義がないため
+      const existingAction = actions.find((action) => action.id === actionId);
+      if (existingAction) {
+        // @ts-expect-error removeAction メソッドにも型定義がないため
+        editorInstance.removeAction(actionId);
+      }
+
+      editorInstance.addAction({
+        id: actionId,
+        label: "Execute Custom Action",
+        keybindings: [
+          // @ts-expect-error monaco.KeyMod と monaco.KeyCode の型定義がないため
+          monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+        ],
+        contextMenuGroupId: "navigation",
+        contextMenuOrder: 1.5,
+        run: function (): void {
+          checkHandle();
+        },
+      });
+
+      console.log(
+        "エディタアクションの設定完了！Ctrl+Enterでコード実行できるようになったよ🦈",
+      );
+    }
+  }, [webContainer, editorInstance, checkHandle]);
 
   function handleEditorDidMount(
     editor: monaco.editor.IStandaloneCodeEditor,
