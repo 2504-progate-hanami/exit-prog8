@@ -59,5 +59,5 @@ console.log(age >= 20 ? "成人です" : "未成年です");`,
       },
     ],
   },
-  nextProblemId: "2",
+  nextProblemId: "lesson2",
 } as Problem;
