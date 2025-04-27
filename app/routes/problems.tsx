@@ -83,6 +83,8 @@ const Problems: React.FC = () => {
     if (!id) return;
 
     if (id === "congrats") {
+      setSessionProblemNumber(0);
+      setNowProblemNumber(0);
       navigate(`/congrats`);
     }
     (async () => {
