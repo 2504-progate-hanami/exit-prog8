@@ -133,7 +133,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
           imgSrc={lesson.imgSrc}
           title={lesson.title}
           description={lesson.description}
-          name={`Lesson ${id} - Slide ${currentSlideIndex + 1}/${totalSlides}`}
+          name={`Slide ${currentSlideIndex + 1}/${totalSlides}`}
           onClose={() => {
             setIsVisible(false);
             setIsModalOpen(false);
