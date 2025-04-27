@@ -1,8 +1,8 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
-import type { ProblemInstruction } from "../types/problem";
-import type { CSSProperties, JSX } from "react";
 import { useAtom, useAtomValue } from "jotai";
+import type { CSSProperties, JSX } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { isSlideModalAtom, problemAtom } from "~/atoms";
+import type { ProblemInstruction } from "../types/problem";
 
 export function Slide({ id }: { id: number }): JSX.Element {
   const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
@@ -213,7 +213,7 @@ function CreateSlide({
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const [imageTop, setImageTop] = useState<number>(0);
+  const [, setImageTop] = useState<number>(0);
 
   useLayoutEffect(() => {
     const nameHeight = nameRef.current?.offsetHeight || 0;
@@ -234,11 +234,11 @@ function CreateSlide({
       paddingLeft: "25px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
       width: "650px",
-      minHeight: "450px",
-      position: "relative",
       display: "flex",
       flexDirection: "column",
       justifyContent: "flex-start",
+      overflow: "hidden",
+      maxHeight: "90vh",
     },
     closeButton: {
       position: "absolute",
@@ -298,12 +298,15 @@ function CreateSlide({
     },
     imageContainer: {
       zIndex: 1,
-      position: "absolute",
-      left: "25px",
-      right: "25px",
-      top: imageTop,
+      position: "relative", // absoluteからrelativeに変更
+      margin: "0 25px", // 左右のマージンを設定
+      marginTop: "10px", // 上部に少し余白
       marginBottom: "10px",
-      overflow: "hidden",
+      flexGrow: 1, // 残りのスペースを埋める
+      display: "flex", // フレックスボックスを使用
+      alignItems: "center", // 中央揃え
+      justifyContent: "center",
+      minHeight: imgSrc ? "200px" : "150px", // 画像がある場合は最小高さを確保
     },
     imageAspectRatio: {
       paddingBottom: "56.25%",
@@ -311,14 +314,12 @@ function CreateSlide({
       height: "0",
     },
     image: {
-      position: "absolute",
-      top: "35%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: "70%",
-      height: "80%",
+      maxWidth: "100%",
+      maxHeight: "60vh", // ビューポートの60%を最大高さに
+      width: "auto",
+      height: "auto",
       borderRadius: "4px",
-      objectFit: "cover",
+      objectFit: "contain",
     },
     noImage: {
       display: "flex",
