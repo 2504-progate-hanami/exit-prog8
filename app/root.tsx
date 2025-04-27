@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { atom, useAtom } from "jotai";
+import Congrats from "./routes/congrats";
 
 const queryClient = new QueryClient();
 
@@ -70,7 +71,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const location = useLocation();
+
+  return <>{location.pathname === "/congrats" ? <Congrats /> : <Outlet />}</>;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

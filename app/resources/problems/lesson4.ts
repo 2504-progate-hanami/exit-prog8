@@ -69,5 +69,5 @@ console.log(foods);`,
       },
     ],
   },
-  nextProblemId: "5",
+  nextProblemId: "lesson5",
 } as Problem;
