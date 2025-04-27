@@ -41,3 +41,5 @@ export const debugAnomaliesAtom = atom<Anomaly[]>([]);
 
 // セッションストレージからの初期値を使用
 export const nowProblemNumberAtom = atom<number>(getInitialProblemNumber());
+
+export const handleRunAtom = atom<(() => Promise<void>) | null>(null);
