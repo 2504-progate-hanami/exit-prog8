@@ -1,17 +1,18 @@
-import type { Anomaly } from "~/types/anomaly";
+import gamingWanko from "~/resources/anomalies/gaming-wanko";
+import lightningEffect from "~/resources/anomalies/lightning-effect";
+import pathTurnBack from "~/resources/anomalies/path-turn-back";
 import rainbowHeader from "~/resources/anomalies/rainbow-header";
 import snowstormEffect from "~/resources/anomalies/snowstorm-effect";
-import lightningEffect from "~/resources/anomalies/lightning-effect";
-import levelUpIndent from "~/resources/anomalies/levelUpIndent";
-import gamingWanko from "~/resources/anomalies/gaming-wanko";
+import type { Anomaly } from "~/types/anomaly";
 
 // 異変を作成したら、ここに追加してください
 export const anomalies: Anomaly[] = [
   rainbowHeader,
   snowstormEffect,
   lightningEffect,
-  levelUpIndent,
-  gamingWanko, // 新しい異変を追加
+  // levelUpIndent,
+  gamingWanko,
+  pathTurnBack,
 ];
 
 /**
