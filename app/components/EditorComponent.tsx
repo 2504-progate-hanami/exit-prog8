@@ -7,7 +7,6 @@ import {
   checkStateAtom,
   problemAtom,
   webContainerAtom,
-  handleRunAtom,
 } from "~/atoms";
 import { editorContentAtom, editorInstanceAtom } from "../atoms";
 import { EditorHoverButton } from "./EditorHoverButton";
@@ -21,7 +20,6 @@ export function EditorComponent() {
   const [problem] = useAtom(problemAtom);
   const [anomalyPool] = useAtom(anomalyPoolAtom);
   const setCheckState = useSetAtom(checkStateAtom);
-  const [handleRun] = useAtom(handleRunAtom);
 
   useEffect(() => {
     setIsMounted(true);
@@ -172,13 +170,6 @@ export function EditorComponent() {
         contextMenuOrder: 1.5,
         run: function (): void {
           checkHandle();
-          const onSubmit = async () => {
-            if (handleRun) {
-              await handleRun();
-            }
-          };
-          // 定義した関数を実際に実行
-          onSubmit();
         },
       });
 
