@@ -7,6 +7,7 @@ import {
   isSubmitPopupOpenAtom,
   nowProblemNumberAtom,
   nowAnomalyAtom,
+  resetEditorConfigAtom,
   handleRunAtom,
 } from "~/atoms";
 import { useNavigate } from "react-router-dom";
@@ -29,9 +30,13 @@ export function SubmitButton({
   const [problem] = useAtom(problemAtom);
   const [, setNowProblemNumber] = useAtom(nowProblemNumberAtom);
   const [nowAnomaly] = useAtom(nowAnomalyAtom);
+  const [, resetEditorConfig] = useAtom(resetEditorConfigAtom); // 追加：リセット関数
   const navigate = useNavigate();
 
   const checkCorrect = () => {
+    // エディタ設定をリセット
+    resetEditorConfig();
+
     // 異変がある場合はlesson1へリセット
     if (nowAnomaly !== null) {
       // まずポップアップを閉じる
@@ -78,6 +83,9 @@ export function SubmitButton({
   };
 
   const goBack = () => {
+    // エディタ設定をリセット
+    resetEditorConfig();
+
     // 異変がない場合はlesson1へリセット
     if (nowAnomaly == null) {
       // ポップアップを閉じる

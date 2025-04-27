@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import {
   anomalyPoolAtom,
   checkStateAtom,
+  monacoEditorConfigAtom,
   problemAtom,
   webContainerAtom,
 } from "~/atoms";
@@ -19,11 +20,20 @@ export function EditorComponent() {
   const [webContainer] = useAtom(webContainerAtom);
   const [problem] = useAtom(problemAtom);
   const [anomalyPool] = useAtom(anomalyPoolAtom);
+  const [editorConfig] = useAtom(monacoEditorConfigAtom);
   const setCheckState = useSetAtom(checkStateAtom);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // エディタ設定が変更されたら反映する
+  useEffect(() => {
+    if (editorInstance) {
+      console.log("エディタ設定を更新:", editorConfig);
+      editorInstance.updateOptions(editorConfig);
+    }
+  }, [editorInstance, editorConfig]);
 
   useEffect(() => {
     if (problem?.initialCode) {

@@ -5,12 +5,15 @@ import lightningEffect from "~/resources/anomalies/lightning-effect";
 // import levelUpIndent from "~/resources/anomalies/levelUpIndent";
 import gamingWanko from "~/resources/anomalies/gaming-wanko";
 import shakingScreen from "~/resources/anomalies/shaking-screen"; // 新しい異変をインポート
+import levelUpFontSize from "~/resources/anomalies/levelUpFontSize";
 
 // 異変を作成したら、ここに追加してください
 export const anomalies: Anomaly[] = [
   rainbowHeader,
   snowstormEffect,
   lightningEffect,
+  levelUpFontSize,
+  gamingWanko,
   gamingWanko,
   shakingScreen,
 ];
