@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function DetailGame() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center py-12 bg-gray-100 font-sans">
       <h1 className="text-2xl md:text-3xl text-gray-800 mb-8 text-center">
@@ -51,7 +54,7 @@ export default function DetailGame() {
         <div className="flex justify-center mt-8">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full transition duration-300"
-            onClick={() => alert("挑戦、お待ちしています！")}
+            onClick={() => navigate("/problems/lesson0")}
           >
             いざ、レッスンへ！
           </button>
