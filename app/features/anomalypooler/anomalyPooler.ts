@@ -32,6 +32,6 @@ export function getRandomAnomalies(count: number = 1): Anomaly[] {
  * @param probability 発生確率（0.0〜1.0）
  * @returns 発生させる場合はtrue、そうでない場合はfalse
  */
-export function triggerAnomaly(probability: number = 1.0): boolean {
+export function triggerAnomaly(probability: number = 0.6): boolean {
   return Math.random() < probability;
 }
