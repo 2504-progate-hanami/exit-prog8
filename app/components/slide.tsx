@@ -5,17 +5,25 @@ import { useAtom, useAtomValue } from "jotai";
 import { isSlideModalAtom, problemAtom } from "~/atoms";
 
 export function Slide({ id }: { id: number }): JSX.Element {
+  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
   const [lesson, setLesson] = useState<ProblemInstruction | null>(null);
   const [, setIsModalOpen] = useAtom(isSlideModalAtom);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const modalRef = useRef<HTMLDivElement>(null);
   const problem = useAtomValue(problemAtom);
 
+  // スライドの総数を保持
+  const [totalSlides, setTotalSlides] = useState<number>(0);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsVisible(false);
         setIsModalOpen(false);
+      } else if (e.key === "ArrowRight") {
+        handleNextSlide();
+      } else if (e.key === "ArrowLeft") {
+        handlePrevSlide();
       }
     };
 
@@ -23,7 +31,21 @@ export function Slide({ id }: { id: number }): JSX.Element {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [currentSlideIndex, totalSlides]);
+
+  // スライドを次に進める関数
+  const handleNextSlide = () => {
+    if (currentSlideIndex < totalSlides - 1) {
+      setCurrentSlideIndex(currentSlideIndex + 1);
+    }
+  };
+
+  // スライドを前に戻す関数
+  const handlePrevSlide = () => {
+    if (currentSlideIndex > 0) {
+      setCurrentSlideIndex(currentSlideIndex - 1);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,11 +64,19 @@ export function Slide({ id }: { id: number }): JSX.Element {
   useLayoutEffect(() => {
     const loadLesson = async () => {
       try {
-        if (problem && problem.instructions && problem.instructions[0]) {
+        if (
+          problem &&
+          problem.instructions &&
+          problem.instructions.length > 0
+        ) {
+          // スライドの総数を設定
+          setTotalSlides(problem.instructions.length);
+
+          // 現在のインデックスのスライドを表示
           setLesson({
-            title: problem.instructions[0].title,
-            description: problem.instructions[0].description,
-            imgSrc: problem.instructions[0].imgSrc,
+            title: problem.instructions[currentSlideIndex].title,
+            description: problem.instructions[currentSlideIndex].description,
+            imgSrc: problem.instructions[currentSlideIndex].imgSrc,
           });
         } else {
           console.error(`Lesson ${id} is missing required data.`);
@@ -58,7 +88,7 @@ export function Slide({ id }: { id: number }): JSX.Element {
       }
     };
     loadLesson();
-  }, [id]);
+  }, [id, currentSlideIndex, problem]);
 
   if (!isVisible) {
     return <></>;
@@ -82,11 +112,15 @@ export function Slide({ id }: { id: number }): JSX.Element {
           imgSrc={lesson.imgSrc}
           title={lesson.title}
           description={lesson.description}
-          name={`Lesson ${id}`}
+          name={`Lesson ${id} - Slide ${currentSlideIndex + 1}/${totalSlides}`}
           onClose={() => {
             setIsVisible(false);
             setIsModalOpen(false);
           }}
+          onPrev={handlePrevSlide}
+          onNext={handleNextSlide}
+          hasPrev={currentSlideIndex > 0}
+          hasNext={currentSlideIndex < totalSlides - 1}
         />
       </div>
     </div>
@@ -139,7 +173,18 @@ function CreateSlide({
   description,
   name,
   onClose,
-}: ProblemInstruction & { name: string; onClose: () => void }) {
+  onPrev,
+  onNext,
+  hasPrev,
+  hasNext,
+}: ProblemInstruction & {
+  name: string;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  hasPrev: boolean;
+  hasNext: boolean;
+}) {
   const nameRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
@@ -330,8 +375,12 @@ function CreateSlide({
         </div>
       </div>
       <div style={styles.arrowContainer}>
-        <button style={styles.arrowButton}>{"<"}</button>
-        <button style={styles.arrowButton}>{">"}</button>
+        <button style={styles.arrowButton} onClick={onPrev} disabled={!hasPrev}>
+          {"<"}
+        </button>
+        <button style={styles.arrowButton} onClick={onNext} disabled={!hasNext}>
+          {">"}
+        </button>
       </div>
     </div>
   );
