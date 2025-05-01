@@ -1,6 +1,9 @@
 # Exit-prog8
 Progate版 8番出口ライクゲームです
 
+## Topa'z (このアプリについて詳しく知りたい方はこちら👇)
+https://topaz.dev/projects/ccc1446d70a00e93ff2d
+
 ## 準備
 ### `.env` を作成する
 プロジェクトルートの `.env.example` をコピーし、`.env` という名前にリネームして作成してください
